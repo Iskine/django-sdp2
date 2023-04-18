@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+{% block title %} My Profile {% endblock %}
+
+
+{% block content %} 
+
+<h1>My Profile</h1>
+
+        <h4> Firstname: {{ request.user.first_name }}</h4>
+        <h4> Lastname: {{ request.user.last_name }}</h4>
+        <h4> Username: {{ request.user.username }} </h4> 
+        <h4> Email: {{ request.user.email }}</h4>
+        {% for group in user.groups.all %}
+            <h4> Role: {{ group.name }}</h4>
+        {% endfor %}
+    
+        
+        <a class="btn btn-primary" href="/edit_my_profile" role="button">Edit Profile</a>
+    
+    
+{% endblock %}
+ 
+

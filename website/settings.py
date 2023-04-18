@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5', 
+    
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_sdpII',
+        'NAME': 'sdp2_django',
         'HOST': '127.0.0.1',
         'PORT': '3308',
         'USER': 'root',
@@ -94,11 +95,11 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_HOST = 'smtp.office365.come'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'nusara-boonma@hotmail.com'
-# EMAIL_HOST_PASSWORD = '31200123'
+EMAIL_HOST = 'smtp.gmail.come'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'nusara.toy@gmail.com'
+EMAIL_HOST_PASSWORD = 'dpzpfyiehyousqvw'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

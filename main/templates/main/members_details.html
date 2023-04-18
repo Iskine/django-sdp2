@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% block title %} User Profile Details {% endblock %}
+
+
+{% block content %} 
+
+<h1>User Profile Details</h1>
+ 
+<h3>Username: {{ memberdetails.username}}</h3>
+<h3>Name: {{ memberdetails.first_name }} {{ memberdetails.last_name }}</h3>
+
+    {% if user.is_staff %}
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning" name="user-id" value="{{post.author.id}}">Edit Profile</button>
+                </form>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" name="user-id" value="{{post.author.id}}">Delete Profile</button>
+                </form>
+    {% endif %}
+
+<a class="btn btn-primary" href="/members" role="button">back</a> 
+
+{% endblock %}
+ 
+
