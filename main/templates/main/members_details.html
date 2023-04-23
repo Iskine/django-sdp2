@@ -1,23 +1,25 @@
 {% extends 'main/base.html' %}
 {% block title %} User Profile Details {% endblock %}
 
-
+{% load crispy_forms_tags %}
 {% block content %} 
 
 <h1>User Profile Details</h1>
  
 <h3>Username: {{ memberdetails.username}}</h3>
 <h3>Name: {{ memberdetails.first_name }} {{ memberdetails.last_name }}</h3>
+{% for group in memberdetails.groups.all %}
+    <h4> Role: {{ group.name }}</h4>
+{% endfor %}
 
     {% if user.is_staff %}
-                <form method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning" name="user-id" value="{{post.author.id}}">Edit Profile</button>
-                </form>
-                <form method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger" name="user-id" value="{{post.author.id}}">Delete Profile</button>
-                </form>
+
+            <a href="{% url 'edit_user' memberdetails.id %}" class="btn btn-secondary"> Edit Profile </a>
+
+            <a href="{% url 'change_user_password' memberdetails.id %}" class="btn btn-warning"> Change Password </a>
+
+            <a href="{% url 'delete_user' memberdetails.id%}" class="btn btn-danger"> Delete </a>
+
     {% endif %}
 
 <a class="btn btn-primary" href="/members" role="button">back</a> 

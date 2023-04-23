@@ -10,10 +10,13 @@
 <form method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <p>Have an account? Login <a href="/login">Here</a>!</p>
     <button type="submit" class="btn btn-success">Save</button>
-    <a class="btn btn-danger" type='submit'>Cancel</a>
 </form>
+
+<br><br>
+
+
+<a href="{% url 'delete_my_account' user.id%}"><button class="btn btn-danger">Delete My Account</button></a>
+
+
 {% endblock %}
-
-

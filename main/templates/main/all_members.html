@@ -8,11 +8,14 @@
 
   
 <ul>
-    {% for x in mymembers %}
-      <li><a href="details/{{ x.id }}">{{ x.username }}</a></li>
-    {% endfor %}
-</ul>
 
+    {% for x in mymembers %}   
+
+      <li><a href="details/{{ x.id }}">{{ x.username }}</a></li>
+ 
+    {% endfor %}
+ 
+</ul>
 
 {% endblock %}
  

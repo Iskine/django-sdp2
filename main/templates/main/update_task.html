@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+  <h1>Update Task "{{ task.title }}"</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Task</button>
+  </form>
+
+  <a href="{% url 'delete_task' project_id=project_id task_id=task.id %}">Delete</a>
+  
+
+{% endblock %}

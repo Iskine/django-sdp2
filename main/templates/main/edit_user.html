@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+{% block title %} Edit User Profile {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %} 
+
+<h1>Edit Profile</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="edit user">
+    <a href="{% url 'members' %}">Cancel</a>
+</form>
+{% endblock %}
+
+
