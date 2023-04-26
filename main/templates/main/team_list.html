@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+  <h1>Teams</h1>
+
+  <a href="/create_team">Create Team</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Team Name</th>
+        <th>Team Leader</th>
+        <th>Team Manager</th>
+        <th>Members</th>
+        <th>Project</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for team in teams %}
+        <tr>
+          <td>{{ team.name }}</td>
+          <td>{{ team.team_leader }}</td>
+          <td>{{ team.team_manager }}</td>
+          <td>
+            {% for membership in team.membership_set.all %}
+              {{ membership.user }}
+            {% endfor %}
+          </td>
+          <td> </td>
+        
+          <td><a href="{% url 'update_team' pk=team.pk%}">update</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

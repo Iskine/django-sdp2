@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ team_form.as_p }}
+    {{ membership_form.as_p }}
+    <button type="submit">Create Team</button>
+  </form>
+{% endblock %}

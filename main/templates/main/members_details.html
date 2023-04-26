@@ -14,7 +14,7 @@
 
     {% if user.is_staff %}
 
-            <a href="{% url 'edit_user' memberdetails.id %}" class="btn btn-secondary"> Edit Profile </a>
+            <a href="{% url 'update_user' memberdetails.id %}" class="btn btn-secondary"> Update Profile </a>
 
             <a href="{% url 'change_user_password' memberdetails.id %}" class="btn btn-warning"> Change Password </a>
 

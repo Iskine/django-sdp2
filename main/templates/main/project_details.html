@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+{% block title %} Project Details {% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %} 
+
+<h1>Project Details</h1>
+ 
+<h3>Name: {{ project.name}}</h3>
+<h3>Description: {{ project.description }} </h3>
+<h3>start date: {{ project.start_date }} </h3>
+<h3>end date: {{ project.end_date }} </h3>
+<h3>updated at: {{ project.updated_at }} </h3>
+<h3>status: {{ project.status }} </h3>
+<h3>created by: {{ project.created_by }} </h3>
+{% if team %}
+  <h3>Team Name: {{ team.name }}</h3>
+{% else %}
+  <p>No team assigned</p>
+{% endif %}
+
+
+{% if is_team_leader %}
+    <a href="{% url 'delete_project' project_id=project.pk %}">Delete</a>
+{% endif %}
+
+{% if is_team_leader or is_team_member %}
+    <a href="{% url 'update_project' project_id=project.pk %}">Update</a>
+{% endif %}
+
+<a class="btn btn-primary" href="/project_list" role="button">back</a> 
+
+{% endblock %}
+ 
+

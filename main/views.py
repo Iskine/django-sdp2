@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm, PostForm, ProjectForm, TaskForm
+from .forms import RegisterForm, ProjectForm, TaskForm, TeamForm, MembershipForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import login, logout
-from .models import Post, Project, TeamMember, Task
+from .models import Project, Task, Team, Membership
 from django.contrib.auth.models import User, Group
 from django.template import loader 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib import messages 
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import TemplateView
+from django.utils import timezone
+from django.db.models import Q
+from django.core.exceptions import PermissionDenied
+
+
 
 
 
@@ -20,47 +23,8 @@ from django.views.generic import TemplateView
 #home page
 @login_required(login_url="/login")#if not login, redirect to /login
 def home(request): 
-	posts = Post.objects.all()
+	return render(request, 'main/home.html', {})
 
-	if request.method == "POST":
-		post_id = request.POST.get("post-id")
-		user_id = request.POST.get("user-id")
-
-		if post_id:
-			post = Post.objects.filter(id=post_id).first()
-			if post and (post.author == request.user or request.user.has_perm("main.delete_post")):
-				post.delete()
-		elif user_id:
-			user = User.objects.filter(id=user_id).first()
-			if user and request.user.is_staff:
-				try: 
-					group = Group.objects.get(name='student')
-					group.user_set.remove(user)
-				except: 
-					pass 
-
-				try: 
-					group = Group.objects.get(name='advisor')
-					group.user_set.remove(user)
-				except: 
-					pass
-				
-	return render(request, 'main/home.html', {"posts": posts})
-
-#create a post form
-@login_required(login_url="/login")
-@permission_required("main.add_post", login_url="/login", raise_exception=True)
-def create_post(request): 
-	if request.method == 'POST':
-		form = PostForm(request.POST)
-		if form.is_valid():
-			post = form.save(commit=False)
-			post.author = request.user
-			post.save()
-			return redirect("/home")
-	else:
-		form = PostForm()
-	return render(request, 'main/create_post.html', {"form": form})
 
 #register form
 def sign_up(request):
@@ -86,9 +50,9 @@ def my_profile(request):
 	}
 	return HttpResponse(template.render(context, request))
 
-#the account owner can edit/update their profile information
+#the account owner can update their profile information
 @login_required(login_url="/login")
-def edit_my_profile(request):
+def update_my_profile(request):
 	if request.user.is_authenticated:
 		current_user = User.objects.get(id=request.user.id)
 		form = RegisterForm(request.POST or None, instance=current_user)
@@ -98,9 +62,9 @@ def edit_my_profile(request):
 			messages.success(request, ("Your Profile has been updated"))
 			return redirect('my_profile')
 		
-		return render(request, "main/edit_my_profile.html", {'form':form})
+		return render(request, "main/update_my_profile.html", {'form':form})
 	else:
-		messages.success(request, ("You must logged in to edit profile"))
+		messages.success(request, ("You must logged in to update profile"))
 		return redirect('/login')
 	
 
@@ -135,7 +99,7 @@ def delete_user(request, id):
 # Update user profile by admin(without password)
 @login_required(login_url="/login")
 @user_passes_test(lambda user: user.is_superuser)
-def edit_user(request, id):
+def update_user(request, id):
 	now_user = get_object_or_404(User, id=id)
 	if request.method == 'POST':
 		form = UserChangeForm(request.POST, instance=now_user)
@@ -150,6 +114,7 @@ def edit_user(request, id):
 			form.save()
 			messages.success(request, 'User profile has been updated.')
 			return redirect('members')
+		
 	else:
 		form = UserChangeForm(instance=now_user)
 		form.fields.pop('password')
@@ -158,10 +123,11 @@ def edit_user(request, id):
 		# form.fields.pop('groups')
 		form.fields.pop('date_joined')
 		form.fields.pop('user_permissions')
+
 	context = {
 		'form': form,
 	}
-	return render(request, 'main/edit_user.html', context)
+	return render(request, 'main/update_user.html', context)
 
 #update user password by admin
 @login_required(login_url="/login")
@@ -206,39 +172,79 @@ def details(request, id):
 @login_required
 def create_project(request):
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.user, request.POST)
         if form.is_valid():
             project = form.save(commit=False)
             project.created_by = request.user
             project.save()
             return redirect('home')
     else:
-        form = ProjectForm()
+        form = ProjectForm(request.user)
     return render(request, 'main/create_project.html', {'form': form})
 
 
 #display list of projects
 @login_required(login_url="/login")
 def project_list(request):
-  projects = Project.objects.all().values()
-  template = loader.get_template('main/project_list.html')
-  context = {
-    'projects': projects,
-  }
-  return HttpResponse(template.render(context, request))
+  user = request.user
+  if user.groups.filter(name='team_member').exists():
+        memberships = Membership.objects.filter(user=user)
+        teams = [membership.team for membership in memberships]
+        projects = Project.objects.filter(team__in=teams)
+  elif user.groups.filter(name='team_leader').exists():
+        teams = Team.objects.filter(team_leader=user)
+        projects = Project.objects.filter(team__in=teams)
+  else:
+        projects = Project.objects.all()
+  return render(request, 'main/project_list.html', {'projects':projects}) 
+
+
+# project details
+def project_details(request, project_id):
+    user = request.user
+    project = get_object_or_404(Project, pk=project_id)
+    is_team_leader = user.groups.filter(name='team_leader').exists()
+    is_team_member = user.groups.filter(name='team_member').exists()
+    
+    if not user.groups.filter(Q(name='team_leader') | Q(name='team_member')).exists() and user != project.created_by:
+        raise PermissionDenied
+    # Get the team for the project
+    team = project.team
+    # Get the members of the team
+    members = team.members.all()
+    return render(request, 'main/project_details.html', {'project': project, 'team': team, 'members': members,  'is_team_leader': is_team_leader, 'is_team_member': is_team_member})
+
+
+# Update Project
+def update_project(request, project_id):
+    user = request.user
+    project = get_object_or_404(Project, pk=project_id)
+    if not user.groups.filter(Q(name='team_leader') | Q(name='team_member')).exists() and user != project.created_by:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project, user=user)
+        if form.is_valid():
+            form.save()
+            return redirect('project_details', pk=project.pk)
+    else:
+        form = ProjectForm(instance=project, user=user)
+
+    return render(request, 'main/update_project.html', {'form': form, 'project': project})
 
 # Delete project
 @login_required(login_url="/login")
-def delete_project(request, id):
-	project_to_delete = Project.objects.get(id=id)
-	if request.method == 'POST':
-		project_to_delete.delete()
-		return redirect('home')
-	else:
-		context = {
-			'projects' : project_to_delete,
-		}
-	return render(request, 'main/delete_project.html', context)
+def delete_project(request, project_id):
+    user = request.user
+    project = get_object_or_404(Project, pk=project_id)
+    if not user.groups.filter(name='team_leader').exists():
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        project.delete()
+        return redirect('project_list')
+
+    return render(request, 'main/delete_project.html', {'project': project})
 
 
 # Create project task
@@ -283,44 +289,25 @@ def delete_task(request, project_id, task_id):
 	return render(request, 'main/delete_task.html', {'task':task, 'project_id': project_id, 'task_id': task_id})
 
 
-
-# class GanttChartView(GoogleChartsMixin, JSONResponseMixin, TemplateView):
-#     chart_type = 'gantt'
-#     template_name = 'gantt_chart.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super(GanttChartView, self).get_context_data(**kwargs)
-#         tasks = Task.objects.all()
-#         data = []
-#         for task in tasks:
-#             data.append([
-#                 task.title,
-#                 task.title,
-#                 '',
-#                 task.start_date,
-#                 task.end_date,
-#                 None,
-#                 100,
-#                 ''
-#             ])
-#         context['chart_data'] = data
-#         return context
-
+# get task data for gantt chart
 from django.http import JsonResponse
-from .models import Task
-
-from django.utils.dateparse import parse_date
-
-from datetime import datetime
 
 def get_tasks(request, project_id):
+    # get_object_or_404() function to retrieve the project object with the given ID. If the object doesn't exist, it raises a Http404 exception.
     project = get_object_or_404(Project, pk=project_id)
-    tasks = Task.objects.filter(project=project).values('title', 'start_date', 'end_date')
+    # filter() method of the Task model to retrieve all the tasks that belong to the project. 
+	# set the project in Project to equal to project in the Task
+	# The values() method is used to specify which fields of the Task model should be included in the queryset.
+    tasks = Task.objects.filter(project=project).values('id','title', 'start_date', 'end_date')
+    # creates an empty list data to store the JSON data for each task.
     data = []
+    # iterates over each task in the queryset 
     for task in tasks:
+	# and calculates the duration of the task by subtracting the start date from the end date and adding 1 (since the start and end dates are inclusive).
         start_date = task['start_date']
         end_date = task['end_date']
         duration = (end_date - start_date).days + 1
+	
         data.append({
             'Task_ID': task['title'],
             'Task_Name': task['title'],
@@ -332,4 +319,77 @@ def get_tasks(request, project_id):
         })
     return JsonResponse(data, safe=False)
 
+
+# list member team
+def team_list(request):
+    user = request.user
+    if user.groups.filter(name='team_member').exists():
+        memberships = Membership.objects.filter(user=user)
+        teams = [membership.team for membership in memberships]
+        my_teams = teams
+        
+    elif user.groups.filter(name='team_leader').exists():
+        teams = Team.objects.filter(team_leader=user)
+        my_teams = teams
+    else:
+        teams = Team.objects.all()
+        my_teams = []
+    return render(request, 'main/team_list.html', {'teams': teams, 'my_teams': my_teams})
+
+
+def create_team(request):
+    if request.method == 'POST':
+        team_form = TeamForm(request.POST)
+        membership_form = MembershipForm(request.POST)
+        if team_form.is_valid() and membership_form.is_valid():
+            team = team_form.save()
+            membership_form.save(team=team)
+            return redirect('team_list')
+    else:
+        team_form = TeamForm()
+        membership_form = MembershipForm()
+    return render(request, 'main/create_team.html', {'team_form': team_form, 'membership_form': membership_form})
+
+
+def update_team(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    if request.method == 'POST':
+        team_form = TeamForm(request.POST, instance=team)
+        membership_form = MembershipForm(request.POST)
+        if team_form.is_valid() and membership_form.is_valid():
+            team = team_form.save()
+            membership_form.save(team=team)
+            return redirect('team_list')
+    else:
+        team_form = TeamForm(instance=team)
+        membership_form = MembershipForm()
+    return render(request, 'main/update_team.html', {'team_form': team_form, 'membership_form': membership_form, 'team': team})
+
+
+# update team
+# def update_team(request, team_id):
+#     team = get_object_or_404(Team, pk=team_id)
+#     if request.method == 'POST':
+#         team_form = TeamForm(request.POST, instance=team)
+#         membership_form = MembershipForm(request.POST, instance=team)
+#         if team_form.is_valid() and membership_form.is_valid():
+#             team = team_form.save()
+#             selected_members = membership_form.cleaned_data['user']
+#             Membership.objects.filter(team=team).delete()
+#             for user in selected_members:
+#                 Membership.objects.create(team=team, user=user)
+#             return redirect('team_list')
+#     else:
+#         team_form = TeamForm(instance=team)
+#         membership_form = MembershipForm(instance=team)
+#     return render(request, 'main/update_team.html', {'team_form': team_form, 'membership_form': membership_form, 'team': team})
+
+
+# delete team
+def delete_team(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    if request.method == 'POST':
+        team.delete()
+        return redirect('team_list')
+    return render(request, 'main/delete_team.html', {'team': team, 'pk': pk})
 

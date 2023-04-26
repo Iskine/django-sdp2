@@ -3,11 +3,11 @@
 
 {% block content %}
 <h1>Delete Project</h1>
-<p>Are you sure you want to delete {{ projects.name }}?</p>
-<form action="{% url 'delete_project' projects.id %}" method="post">
+<p>Are you sure you want to delete {{ project.name }}?</p>
+<form action="{% url 'delete_project' project_id=project.pk %}" method="post">
   {% csrf_token %}
   <input type="submit" value="Yes, delete this projects">
-  <a href="{% url 'project_manager' %}">Cancel</a>
+  <a href="{% url 'project_list' %}">Cancel</a>
 </form>
 
 {% endblock %}

@@ -35,15 +35,14 @@
 
 
 
-<a class="btn btn-primary" href="/project_manager" role="button">back</a> 
+<a class="btn btn-primary" href="/project_list" role="button">back</a> 
 
 <div id="see_chart" data-project-id="{{project.id}}" 
-    style="width: 50px; height: 25px; background-color: skyblue; cursor: pointer; "
+    style="width: 80px; height: 25px; background-color: skyblue; cursor: pointer; "
 >see chart</div><br>
 
 <div id="chart_div"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -55,9 +54,9 @@
         const id = e.target.getAttribute('data-project-id');
 
         google.charts.load('current', {'packages':['gantt']});
-google.charts.setOnLoadCallback(function() {
-  drawChart();
-});
+        google.charts.setOnLoadCallback(function() {
+        drawChart();
+        });
 
 
         function drawChart() {
@@ -85,8 +84,8 @@ google.charts.setOnLoadCallback(function() {
                 new Date(task.Start_Date),
                 new Date(task.End_Date),
                 task.Duration,
-                0,
-                null
+                50,
+                null,
                 ]);
             });
             data.addRows(rows);
