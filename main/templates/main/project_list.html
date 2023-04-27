@@ -6,7 +6,9 @@
   {% csrf_token %}
   {{ form.as_p }}
   
+  {% if can_create_project %}
   <a href="/create_project" class="btn btn-primary"> Create Project </a>
+  {% endif %}
 
    <br>
 
@@ -17,6 +19,7 @@
       <h3>Projects</h3>
       <ul class="list-unstyled">
         {% for x in projects %}
+ 
           <li>
             <br>
             <li><a href="{% url 'task_list' x.id %}">More task</a></li>
@@ -30,12 +33,19 @@
             <br>
             status: {{ x.status }} 
             <br>
-            team: {{ x.team.name }}
-            <br>
+            {% if x.team %}
+              team: {{ x.team.name }}
+              <br>
+            {% else %}
+              team: No team assigned
+              <br>
+            {% endif %}
     
-            <a href="{% url 'project_details' x.id %}">More Details</a>
+    
+            <a href="{% url 'project_details' project_id=x.pk %}">More Details</a>
            
           </li>
+
         {% empty %}
           <p>No projects found.</p>
         {% endfor %}

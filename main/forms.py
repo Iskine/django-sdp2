@@ -20,7 +20,7 @@ class ProjectForm(forms.ModelForm):
         ('complete', 'Complete')
     )
     status = forms.ChoiceField(choices=STATUS_CHOICES)
-    team = forms.ModelChoiceField(queryset=Team.objects.none())
+    team = forms.ModelChoiceField(queryset=Team.objects.none(), required=False)
 
     class Meta:
         model = Project

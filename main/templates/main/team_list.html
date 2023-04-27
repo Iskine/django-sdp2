@@ -3,7 +3,12 @@
 {% block content %}
   <h1>Teams</h1>
 
-  <a href="/create_team">Create Team</a>
+
+  {% if can_create_team %}
+    <a href="/create_team">Create Team</a>
+ {% endif %}
+
+
   <table>
     <thead>
       <tr>
@@ -26,8 +31,9 @@
             {% endfor %}
           </td>
           <td> </td>
-        
+          {% if can_update_team %}
           <td><a href="{% url 'update_team' pk=team.pk%}">update</a></td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>
