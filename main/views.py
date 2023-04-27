@@ -168,6 +168,87 @@ def details(request, id):
   return HttpResponse(template.render(context, request))
 
 
+
+
+# list member team
+def team_list(request):
+    user = request.user
+    if user.groups.filter(name='team_member').exists():
+        memberships = Membership.objects.filter(user=user)
+        teams = [membership.team for membership in memberships]
+        my_teams = teams
+        can_create_team = False
+        can_update_team = False
+        
+    elif user.groups.filter(name='team_leader').exists():
+        teams = Team.objects.filter(team_leader=user)
+        my_teams = teams
+        can_create_team = False
+        can_update_team = False
+        
+    elif user.groups.filter(name='team_manager').exists():
+        teams = Team.objects.all()
+        my_teams = teams
+        can_create_team = True
+        can_update_team = True
+    else:
+        teams = Team.objects.all()
+        my_teams = []
+        can_create_team = False
+        can_update_team = False
+    return render(request, 'main/team_list.html', {'teams': teams, 'my_teams': my_teams, 'can_create_team':can_create_team, 'can_update_team':can_update_team})
+
+#create team
+@login_required(login_url="/login")
+def create_team(request):
+    if not request.user.groups.filter(name='team_manager').exists():
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        team_form = TeamForm(request.POST)
+        membership_form = MembershipForm(request.POST)
+        if team_form.is_valid() and membership_form.is_valid():
+            team = team_form.save()
+            membership_form.save(team=team)
+            return redirect('team_list')
+    else:
+        team_form = TeamForm()
+        membership_form = MembershipForm()
+    return render(request, 'main/create_team.html', {'team_form': team_form, 'membership_form': membership_form})
+
+#update team
+def update_team(request, pk):
+    if not request.user.groups.filter(name='team_manager').exists():
+        raise PermissionDenied
+     
+    team = get_object_or_404(Team, pk=pk)
+    if request.method == 'POST':
+        team_form = TeamForm(request.POST, instance=team)
+        membership_form = MembershipForm(request.POST)
+        if team_form.is_valid() and membership_form.is_valid():
+            team = team_form.save()
+            membership_form.save(team=team)
+            return redirect('team_list')
+    else:
+        team_form = TeamForm(instance=team)
+        membership_form = MembershipForm()
+    return render(request, 'main/update_team.html', {'team_form': team_form, 'membership_form': membership_form, 'team': team})
+
+
+# delete team
+def delete_team(request, pk):
+    if not request.user.groups.filter(name='team_manager').exists():
+        raise PermissionDenied
+    
+    team = get_object_or_404(Team, pk=pk)
+    if request.method == 'POST':
+        team.delete()
+        return redirect('team_list')
+    return render(request, 'main/delete_team.html', {'team': team, 'pk': pk})
+
+
+
+
 #create new project
 @login_required
 def create_project(request):
@@ -258,6 +339,8 @@ def delete_project(request, project_id):
     return render(request, 'main/delete_project.html', {'project': project})
 
 
+
+
 # Create project task
 @login_required(login_url='/login')
 def create_task(request, project_id):
@@ -271,6 +354,7 @@ def create_task(request, project_id):
         if form.is_valid():
             task = form.save(commit=False)
             task.project = project
+            task.created_by = request.user
             task.save()
             return redirect('task_list', project_id=project_id)
     else:
@@ -279,30 +363,63 @@ def create_task(request, project_id):
 
 
 # list the task in each project
+@login_required(login_url="/login")
 def task_list(request, project_id):
-	project = get_object_or_404(Project, pk=project_id)
-	tasks = project.task_set.all()
-	return render(request, 'main/task_list.html', {'project': project, 'tasks': tasks})
+    project = get_object_or_404(Project, pk=project_id)
+    tasks = project.task_set.all()
+    is_team_member = request.user.groups.filter(name='team_member').exists()
+    is_team_leader = request.user.groups.filter(name='team_leader').exists()
+    return render(request, 'main/task_list.html', {'project': project, 'tasks': tasks, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader})
+
+
 
 # update task
+@login_required(login_url="/login")
 def update_task(request, project_id, task_id):
     task = get_object_or_404(Task, pk=task_id)
-    if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task)
-        if form.is_valid():
-            form.save()
-            return redirect('task_list', project_id=project_id)
+    user = request.user
+    project = task.project
+
+    if not (request.user.groups.filter(name='team_member').exists() or request.user.groups.filter(name='team_leader').exists()):
+        raise PermissionDenied
+
+    # Allow all users in the project to update task
+    elif project and (user == project.created_by or (project.team and user in project.team.members.all()) or Membership.objects.filter(team=project.team, user=user).exists()):
+        if request.method == 'POST':
+            form = TaskForm(request.POST, instance=task)
+            if form.is_valid():
+                form.save()
+                return redirect('task_list', project_id=project_id)
+        else:
+            form = TaskForm(instance=task)
+        is_team_member = request.user.groups.filter(name='team_member').exists()
+        is_team_leader = request.user.groups.filter(name='team_leader').exists()
+        return render(request, 'main/update_task.html', {'task':task, 'form': form, 'project_id': project_id, 'task_id': task_id, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader})
     else:
-        form = TaskForm(instance=task)
-    return render(request, 'main/update_task.html', {'task':task, 'form': form, 'project_id': project_id, 'task_id': task_id})
+        return HttpResponseForbidden()
+
+
+
 
 # delete task
+@login_required(login_url="/login")
 def delete_task(request, project_id, task_id):
-	task = get_object_or_404(Task, pk=task_id)
-	if request.method == 'POST':
-		task.delete()
-		return redirect('task_list', project_id=project_id)
-	return render(request, 'main/delete_task.html', {'task':task, 'project_id': project_id, 'task_id': task_id})
+    task = get_object_or_404(Task, pk=task_id)
+    user = request.user
+
+    # Check if the current user is a team leader
+    is_team_leader = user.groups.filter(name='team_leader').exists()
+
+    # Only allow team leaders to delete tasks
+    if not is_team_leader:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        task.delete()
+        return redirect('task_list', project_id=project_id)
+
+    return render(request, 'main/delete_task.html', {'task':task, 'project_id': project_id, 'task_id': task_id, 'is_team_leader': is_team_leader})
+
 
 
 # get task data for gantt chart
@@ -334,81 +451,3 @@ def get_tasks(request, project_id):
             'Dependencies': None
         })
     return JsonResponse(data, safe=False)
-
-
-# list member team
-def team_list(request):
-    user = request.user
-    if user.groups.filter(name='team_member').exists():
-        memberships = Membership.objects.filter(user=user)
-        teams = [membership.team for membership in memberships]
-        my_teams = teams
-        can_create_team = False
-        can_update_team = False
-        
-    elif user.groups.filter(name='team_leader').exists():
-        teams = Team.objects.filter(team_leader=user)
-        my_teams = teams
-        can_create_team = False
-        can_update_team = False
-        
-    elif user.groups.filter(name='team_manager').exists():
-        teams = Team.objects.all()
-        my_teams = teams
-        can_create_team = True
-        can_update_team = True
-    else:
-        teams = Team.objects.all()
-        my_teams = []
-        can_create_team = False
-        can_update_team = False
-    return render(request, 'main/team_list.html', {'teams': teams, 'my_teams': my_teams, 'can_create_team':can_create_team, 'can_update_team':can_update_team})
-
-#create team
-@login_required(login_url="/login")
-def create_team(request):
-    if not request.user.groups.filter(name='team_manager').exists():
-        raise PermissionDenied
-
-    if request.method == 'POST':
-        team_form = TeamForm(request.POST)
-        membership_form = MembershipForm(request.POST)
-        if team_form.is_valid() and membership_form.is_valid():
-            team = team_form.save()
-            membership_form.save(team=team)
-            return redirect('team_list')
-    else:
-        team_form = TeamForm()
-        membership_form = MembershipForm()
-    return render(request, 'main/create_team.html', {'team_form': team_form, 'membership_form': membership_form})
-
-#update team
-def update_team(request, pk):
-    if not request.user.groups.filter(name='team_manager').exists():
-        raise PermissionDenied
-     
-    team = get_object_or_404(Team, pk=pk)
-    if request.method == 'POST':
-        team_form = TeamForm(request.POST, instance=team)
-        membership_form = MembershipForm(request.POST)
-        if team_form.is_valid() and membership_form.is_valid():
-            team = team_form.save()
-            membership_form.save(team=team)
-            return redirect('team_list')
-    else:
-        team_form = TeamForm(instance=team)
-        membership_form = MembershipForm()
-    return render(request, 'main/update_team.html', {'team_form': team_form, 'membership_form': membership_form, 'team': team})
-
-
-# delete team
-def delete_team(request, pk):
-    if not request.user.groups.filter(name='team_manager').exists():
-        raise PermissionDenied
-    
-    team = get_object_or_404(Team, pk=pk)
-    if request.method == 'POST':
-        team.delete()
-        return redirect('team_list')
-    return render(request, 'main/delete_team.html', {'team': team, 'pk': pk})
-

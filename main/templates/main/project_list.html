@@ -40,7 +40,9 @@
               team: No team assigned
               <br>
             {% endif %}
-    
+            
+            created by: {{ x.created_by }}
+               <br>
     
             <a href="{% url 'project_details' project_id=x.pk %}">More Details</a>
            
