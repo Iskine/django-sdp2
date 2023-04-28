@@ -1,20 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm, ProjectForm, TaskForm, TeamForm, MembershipForm
+from .forms import RegisterForm, ProjectForm, TaskForm, TeamForm, MembershipForm, SubTaskForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import login, logout
-from .models import Project, Task, Team, Membership
+from .models import Project, Task, Team, Membership, SubTask
 from django.contrib.auth.models import User, Group
 from django.template import loader 
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib import messages 
 from django.utils import timezone
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
-
-
-
-
+from django.http import JsonResponse
+from django.db.models import Sum
 
 
 
@@ -366,7 +364,7 @@ def create_task(request, project_id):
 @login_required(login_url="/login")
 def task_list(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
-    tasks = project.task_set.all()
+    tasks = project.tasks.all()
     is_team_member = request.user.groups.filter(name='team_member').exists()
     is_team_leader = request.user.groups.filter(name='team_leader').exists()
     return render(request, 'main/task_list.html', {'project': project, 'tasks': tasks, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader})
@@ -422,32 +420,178 @@ def delete_task(request, project_id, task_id):
 
 
 
-# get task data for gantt chart
+# # get task data for gantt chart
+# from django.http import JsonResponse
+
+# def get_tasks(request, project_id):
+#     # get_object_or_404() function to retrieve the project object with the given ID. If the object doesn't exist, it raises a Http404 exception.
+#     project = get_object_or_404(Project, pk=project_id)
+#     # filter() method of the Task model to retrieve all the tasks that belong to the project. 
+# 	# set the project in Project to equal to project in the Task
+# 	# The values() method is used to specify which fields of the Task model should be included in the queryset.
+#     tasks = Task.objects.filter(project=project).values('id','title', 'start_date', 'end_date')
+#     # creates an empty list data to store the JSON data for each task.
+#     data = []
+#     # iterates over each task in the queryset 
+#     for task in tasks:
+# 	# and calculates the duration of the task by subtracting the start date from the end date and adding 1 (since the start and end dates are inclusive).
+#         start_date = task['start_date']
+#         end_date = task['end_date']
+#         duration = (end_date - start_date).days + 1
+	
+#         data.append({
+#             'Task_ID': task['title'],
+#             'Task_Name': task['title'],
+#             'Start_Date': start_date.strftime('%Y-%m-%d'),
+#             'End_Date': end_date.strftime('%Y-%m-%d'),
+#             'Duration': duration,
+#             'Percent_Complete': 30,
+#             'Dependencies': None
+#         })
+#     return JsonResponse(data, safe=False)
+
+
 from django.http import JsonResponse
+from django.db.models import Count
 
 def get_tasks(request, project_id):
-    # get_object_or_404() function to retrieve the project object with the given ID. If the object doesn't exist, it raises a Http404 exception.
     project = get_object_or_404(Project, pk=project_id)
-    # filter() method of the Task model to retrieve all the tasks that belong to the project. 
-	# set the project in Project to equal to project in the Task
-	# The values() method is used to specify which fields of the Task model should be included in the queryset.
     tasks = Task.objects.filter(project=project).values('id','title', 'start_date', 'end_date')
-    # creates an empty list data to store the JSON data for each task.
     data = []
-    # iterates over each task in the queryset 
     for task in tasks:
-	# and calculates the duration of the task by subtracting the start date from the end date and adding 1 (since the start and end dates are inclusive).
         start_date = task['start_date']
         end_date = task['end_date']
         duration = (end_date - start_date).days + 1
-	
+        
+        # Calculate total and completed subtasks for the task
+        subtasks = SubTask.objects.filter(task__id=task['id']).aggregate(total_count=Count('id'), completed_count=Count('id', filter=Q(completed=True)))
+        total_subtasks = subtasks['total_count'] or 1 # avoid divide by zero error
+        completed_subtasks = subtasks['completed_count'] or 0
+        
+        # Calculate percentage completion
+        percent_complete = round((completed_subtasks / total_subtasks) * 100)
+        
         data.append({
             'Task_ID': task['title'],
             'Task_Name': task['title'],
             'Start_Date': start_date.strftime('%Y-%m-%d'),
             'End_Date': end_date.strftime('%Y-%m-%d'),
             'Duration': duration,
-            'Percent_Complete': 30,
+            'Percent_Complete': percent_complete,
             'Dependencies': None
         })
+        
     return JsonResponse(data, safe=False)
+
+
+
+
+
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
+from .models import SubTask, Task
+from .forms import SubTaskForm
+
+def create_sub_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    project = task.project
+    user = request.user
+
+    if not (user == project.created_by or (project.team and user in project.team.members.all()) or Membership.objects.filter(team=project.team, user=user).exists()):
+        return HttpResponseForbidden("You don't have permission to create subtasks in this task.")
+
+    if request.method == "POST":
+        form = SubTaskForm(request.POST)
+        if form.is_valid():
+            subtask = form.save(commit=False)
+            subtask.created_by = request.user
+            subtask.task = task
+            subtask.save()
+            return redirect("sub_task_list", project_id=project.id, task_id=task.id)  # Assuming you have a sub_task_list view
+    else:
+        form = SubTaskForm()
+
+    context = {
+        "task_id": task_id,
+        "project_id": project.id,
+        "form": form,
+        "task": task,
+    }
+
+    return render(request, 'main/create_sub_task.html', context)
+
+
+
+@login_required(login_url="/login")
+def sub_task_list(request, project_id, task_id):
+
+    project = get_object_or_404(Project, pk=project_id)
+    task = get_object_or_404(Task, pk=task_id, project=project)
+ 
+    if not (request.user.groups.filter(name='team_member').exists() or request.user.groups.filter(name='team_leader').exists()):
+        raise PermissionDenied
+
+
+    sub_tasks = SubTask.objects.filter(task=task)
+
+    return render(request, 'main/sub_task_list.html', {'sub_tasks': sub_tasks, 'project_id': project_id, 'task_id': task_id, 'project': project, 'task': task})
+
+
+
+@login_required
+def update_sub_task(request, project_id, task_id, sub_task_id):
+    sub_task = get_object_or_404(SubTask, pk=sub_task_id)
+    task = sub_task.task
+    project = get_object_or_404(Project, pk=project_id)
+
+    # Check user permissions
+    if not (request.user == project.created_by or (project.team and request.user in project.team.members.all()) or Membership.objects.filter(team=project.team, user=request.user).exists()):
+        return HttpResponseForbidden("You don't have permission to update subtasks in this project.")
+
+    if request.method == 'POST':
+        form = SubTaskForm(request.POST, instance=sub_task)
+        if form.is_valid():
+            form.save()
+            return redirect('sub_task_list', project_id=project.id, task_id=task.id)
+    else:
+        form = SubTaskForm(instance=sub_task)
+
+    context = {
+        'form': form,
+        'sub_task_id': sub_task_id,
+        'project_id': project_id,
+        'task_id': task_id,
+        'sub_task': sub_task,
+    }
+
+    return render(request, 'main/update_sub_task.html', context)
+
+
+
+
+
+@login_required
+def delete_sub_task(request, sub_task_id, project_id, task_id):
+    sub_task = get_object_or_404(SubTask, pk=sub_task_id)
+    task = sub_task.task
+    project = task.project
+
+    # Check user permissions
+    if not (request.user == project.created_by or (project.team and request.user in project.team.members.all()) or Membership.objects.filter(team=project.team, user=request.user).exists()):
+        return HttpResponseForbidden("You don't have permission to delete subtasks in this project.")
+
+    if request.method == 'POST':
+        sub_task.delete()
+        return redirect('sub_task_list', project_id=project.id, task_id=task.id)
+
+    context = {
+        'sub_task_id': sub_task_id,
+        'project_id': project_id,
+        'task_id': task_id,
+        'sub_task': sub_task,
+    }
+
+    return render(request, 'main/delete_sub_task.html', context)

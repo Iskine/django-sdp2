@@ -1,7 +1,9 @@
 from django import forms 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
-from .models import Project, Task, Team, Membership
+from .models import Project, Task, Team, Membership, SubTask
+from django.utils.translation import gettext as _
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -93,3 +95,23 @@ class MembershipForm(forms.Form):
                 membership.save()
         return membership
 
+
+
+
+class SubTaskForm(forms.ModelForm):
+    class Meta:
+        model = SubTask
+        fields = [
+            'title',
+            'description',
+            'start_date',
+            'end_date',
+            'completed',
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

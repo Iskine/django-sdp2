@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+  <h1>Delete Sub Task</h1>
+
+  <p>Are you sure you want to delete "{{ sub_task.title }}"?</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Delete" class="btn btn-danger">
+	<p><a href="{% url 'sub_task_list' project_id=project_id task_id=task_id%}">Back to Sub Task List</a></p>
+  </form>
+{% endblock %}

@@ -29,13 +29,31 @@
                 assignee: {{ task.assignee }}
             </li>
             <li>
+                Start Date: {{ task.start_date }}
+            </li>
+            <li>
+                End Date: {{ task.end_date }}
+            </li>
+            <li>
                 created by: {{ task.created_by }}
             </li>
             {% if is_team_member or is_team_leader %}
             <a href="{% url 'update_task' project_id=project.id task_id=task.id %}">update</a>
             {% endif %}
-<br><br>
+
+            <ul>
+            
+            <li>
+                <a href="{% url 'sub_task_list' project_id=project.id task_id=task.id %}">View Sub Tasks</a>
+            </li>
+
+            </ul>
+
+            <br><br>
         {% endfor %}
+      
+    
+        
     </ul>
 {% else %}
 <p>No Tasks found.</p>
@@ -55,68 +73,62 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-
 <script>
-  $(document).ready(function() {
-    $('#see_chart').click((e) => {
-        // alert('hello')
-        const id = e.target.getAttribute('data-project-id');
-
-        google.charts.load('current', {'packages':['gantt']});
-        google.charts.setOnLoadCallback(function() {
-        drawChart();
-        });
-
-
-        function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Task ID');
-        data.addColumn('string', 'Task Name');
-        data.addColumn('date', 'Start Date');
-        data.addColumn('date', 'End Date');
-        data.addColumn('number', 'Duration');
-        data.addColumn('number', 'Percent Complete');
-        data.addColumn('string', 'Dependencies');
-
-        // get data from server
-        $.ajax({
-            url: `/get-tasks/${id}/`,
-            dataType: 'json',
-            success: function(jsonData) {
-                console.log(jsonData)
-            // format data for chart
-            var rows = [];
-            $.each(jsonData, function(i, task) {
-                rows.push([
-                task.Task_ID,
-                task.Task_Name,
-                new Date(task.Start_Date),
-                new Date(task.End_Date),
-                task.Duration,
-                50,
-                null,
-                ]);
+    $(document).ready(function() {
+      $('#see_chart').click((e) => {
+          const id = e.target.getAttribute('data-project-id');
+  
+          google.charts.load('current', {'packages':['gantt']});
+          google.charts.setOnLoadCallback(drawChart);
+  
+          function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Task ID');
+            data.addColumn('string', 'Task Name');
+            data.addColumn('date', 'Start Date');
+            data.addColumn('date', 'End Date');
+            data.addColumn('number', 'Duration');
+            data.addColumn('number', 'Percent Complete');
+            data.addColumn('string', 'Dependencies');
+  
+            // get data from server
+            $.ajax({
+                url: `/get-tasks/${id}/`,
+                dataType: 'json',
+                success: function(jsonData) {
+                    console.log(jsonData)
+                    // format data for chart
+                    var rows = [];
+                    $.each(jsonData, function(i, task) {
+                        rows.push([
+                        task.Task_ID,
+                        task.Task_Name,
+                        new Date(task.Start_Date),
+                        new Date(task.End_Date),
+                        task.Duration,
+                        task.Percent_Complete,
+                        null,
+                        ]);
+                    });
+                    data.addRows(rows);
+  
+                    // set chart options
+                    var options = {
+                        height: 275
+                    };
+  
+                    // create and draw chart
+                    var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+                    chart.draw(data, options);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
             });
-            data.addRows(rows);
-
-            // set chart options
-            var options = {
-                height: 275
-            };
-
-            // create and draw chart
-            var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
-            chart.draw(data, options);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-            console.log(textStatus, errorThrown);
-            }
-        });
-        }
-    })
-});
-
-</script>
+          }
+      });
+    });
+  </script>
 {% endblock %}
  
 

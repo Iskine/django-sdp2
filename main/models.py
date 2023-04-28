@@ -40,12 +40,42 @@ class Project(models.Model):
 class Task(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_tasks', blank=True, null=True )
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_tasks', blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks')
     start_date = models.DateField()
     end_date = models.DateField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='created_tasks')
+    percent_complete = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
 
+    def update_percent_complete(self):
+        """
+        Update the percent complete of the task based on the completion status of its sub-tasks.
+        """
+        num_sub_tasks = self.sub_tasks.count()
+        if num_sub_tasks == 0:
+            self.percent_complete = 0
+        else:
+            num_completed_sub_tasks = self.sub_tasks.filter(completed=True).count()
+            self.percent_complete = int((num_completed_sub_tasks / num_sub_tasks) * 100)
+        self.save()
+
+
+class SubTask(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='created_sub_tasks')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='sub_tasks')
+    completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.task.update_percent_complete()

@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+  <h1>Create Sub Task</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create">
+  </form>
+  <p><a href="{% url 'sub_task_list' project_id=project_id task_id=task_id%}">Back to Sub Task List</a></p>
+
+{% endblock %}

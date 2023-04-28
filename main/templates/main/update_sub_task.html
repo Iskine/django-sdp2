@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <h1>Update Subtask</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+	<a href="{% url 'delete_sub_task' project_id=project_id task_id=task_id sub_task_id=sub_task.pk %}">Delete</a>
+	<p><a href="{% url 'sub_task_list' project_id=project_id task_id=task_id%}">Back to Sub Task List</a></p>
+{% endblock %}

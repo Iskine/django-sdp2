@@ -1,0 +1,49 @@
+{% load static %}
+
+{% extends 'main/base.html' %}
+
+
+
+{% block content %}
+    <h1>{{ task.title }} Subtasks</h1>
+    <a href="{% url 'create_sub_task' task_id=task.id %}" class="btn btn-primary mb-3">Create Subtask</a>
+
+    {% if sub_tasks %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Created By</th>
+                    <th>Completed</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub_task in sub_tasks %}
+                    <tr>
+                        <td>{{ sub_task.title }}</td>
+                        <td>{{ sub_task.description }}</td>
+                        <td>{{ sub_task.start_date }}</td>
+                        <td>{{ sub_task.end_date }}</td>
+                        <td>{{ sub_task.created_by }}</td>
+                        <td>
+                            {% if sub_task.completed %}
+                                <span class="badge bg-success">Completed</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Incomplete</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                          <a href="{% url 'update_sub_task' project_id=project.id task_id=task.id sub_task_id=sub_task.pk %}" class="btn btn-primary">Update</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No subtasks created yet.</p>
+    {% endif %}
+{% endblock %}
