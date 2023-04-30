@@ -1,7 +1,7 @@
 from django import forms 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User, Group
-from .models import Project, Task, Team, Membership, SubTask
+from .models import Project, Task, Team, Membership, SubTask, Comment
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 import re
@@ -177,11 +177,14 @@ class ProjectForm(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['team'].queryset = Team.objects.filter(team_leader=user)
- 
-
+        if user is not None:
+            self.fields['team'].queryset = Team.objects.filter(team_leader=user)
+            print(f"User: {user}")
+            print(f"Team Queryset: {self.fields['team'].queryset}")
+            if user.groups.filter(name='team_member').exists():
+                self.fields['team'].widget.attrs['disabled'] = True
 
 
 
@@ -269,4 +272,15 @@ class SubTaskForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
         }

@@ -1,6 +1,6 @@
 {% extends 'frontend/sidebar.html' %}
 
-{% block title %} Create Task {% endblock %}
+{% block title %} Update Task {% endblock %}
 
 {% block content %}
 
@@ -10,8 +10,8 @@
 
                 <div class="p-10 md:w-1/2 flex flex-col items-start">
 
-                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create New Task</span>
-                <form method="POST" enctype="multipart/form-data" action="{% url 'create_task' project_id=project.id %}">
+                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Update Task</span>
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_task' project_id=project_id task_id=task.id%}">
                 {% csrf_token %}
                   <div class="pt-16">
                     <label for="{{ form.title.auto_id }}" class="leading-7 text-sm text-gray-600">Task Name</label>
@@ -70,9 +70,19 @@
 
                   <div class="mt-8">
                     <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
-                        Create Task
+                        Save
                     </button>
+
+                   
                   </div>
+
+                  {% if is_team_leader %}
+                  <div class="mt-10">
+                  <a href="{% url 'delete_task' project_id=project_id task_id=task.id %}" class="bg-red-500 rounded px-4 py-2 text-white hover:bg-red-300">
+                    Delete
+                  </a>
+                </div>
+                {% endif %}
 
                 </div>
          
@@ -87,7 +97,7 @@
                     </div>
 
                     <div class="mt-2">
-                        <label for="{{ form.assignee.auto_id }}" class="leading-7 text-sm text-gray-600">Team</label>
+                        <label for="{{ form.assignee.auto_id }}" class="leading-7 text-sm text-gray-600">Assignee</label>
                         <select name="{{ form.assignee.html_name }}" 
                         id="{{ form.assignee.auto_id}}" 
                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">

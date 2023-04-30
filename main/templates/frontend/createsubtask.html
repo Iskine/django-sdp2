@@ -1,6 +1,6 @@
 {% extends 'frontend/sidebar.html' %}
 
-{% block title %} Create Task {% endblock %}
+{% block title %} Create Sub Task {% endblock %}
 
 {% block content %}
 
@@ -10,11 +10,11 @@
 
                 <div class="p-10 md:w-1/2 flex flex-col items-start">
 
-                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create New Task</span>
-                <form method="POST" enctype="multipart/form-data" action="{% url 'create_task' project_id=project.id %}">
+                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create New Sub Task</span>
+                <form method="POST" enctype="multipart/form-data" action="{% url 'create_sub_task' task_id=task.id %}">
                 {% csrf_token %}
                   <div class="pt-16">
-                    <label for="{{ form.title.auto_id }}" class="leading-7 text-sm text-gray-600">Task Name</label>
+                    <label for="{{ form.title.auto_id }}" class="leading-7 text-sm text-gray-600">Sub Task Name</label>
                     <input type="text" id="{{ form.title.auto_id }}" 
                     name="{{ form.title.html_name }}" 
                     value="{{ form.title.value|default:''}}"
@@ -70,7 +70,7 @@
 
                   <div class="mt-8">
                     <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
-                        Create Task
+                        Create Sub Task
                     </button>
                   </div>
 
@@ -79,23 +79,23 @@
 
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
                     
-                  <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Task Assignee</h2>
+                  <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Status</h2>
                   <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
                
                     <div class="pt-4">
-                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">+ Add Assignee</div>
+                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Status</div>
                     </div>
 
-                    <div class="mt-2">
-                        <label for="{{ form.assignee.auto_id }}" class="leading-7 text-sm text-gray-600">Team</label>
-                        <select name="{{ form.assignee.html_name }}" 
-                        id="{{ form.assignee.auto_id}}" 
-                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                        {% for choice in form.assignee.field.choices %}
-                        <option value="{{ choice.0 }}" {% if form.assignee.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
-                        {% endfor %}
-                    </select>
-                    </div>
+                    <div class="pt-6">
+                      <label for="{{ form.completed.auto_id }}" class="leading-7 text-md text-gray-600">Completed</label>
+                      <input type="checkbox" id="{{ form.completed.auto_id }}"
+                             name="{{ form.completed.html_name }}"
+                             {% if form.completed.value %}checked{% endif %}
+                             class="form-check-input p-2">
+                  </div>
+                  {% if form.completed.errors %}
+                      <p class="text-red-500 text-sm mt-1">{{ form.completed.errors.as_text }}</p>
+                  {% endif %}
 
                 </form>
                 </div>

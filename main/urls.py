@@ -17,9 +17,10 @@ urlpatterns = [
     path('project_list/', views.project_list, name='project_list'),#list all of the project 
     path('project_details/<int:project_id>', views.project_details, name='project_details'),#Detail of the project 
     path('create_project', views.create_project, name='create_project'),# create new project form
-    path('project/<int:project_id>/update_project', views.update_project, name='update_project'),# update a project 
+    path('project/<int:project_id>/update_project/', views.update_project, name='update_project'),# update a project 
     path('delete_project/<int:project_id>', views.delete_project, name='delete_project'),#delete a project 
     path('project/<int:project_id>/tasks', views.task_list, name='task_list'),#list of task
+    path('project/<int:project_id>/tasks/<int:task_id>/', views.task_details, name='task_details'),#task details
     path('project/<int:project_id>/tasks/create_task', views.create_task, name='create_task'),#create new task form
     path('project/<int:project_id>/tasks/<int:task_id>/update_task', views.update_task, name='update_task'),#update a task
     path('project/<int:project_id>/tasks/<int:task_id>/delete_task', views.delete_task, name='delete_task'),#delete a task
@@ -32,5 +33,4 @@ urlpatterns = [
     path('project/<int:project_id>/tasks/<int:task_id>/sub_task_list/', views.sub_task_list, name='sub_task_list'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/update/', views.update_sub_task, name='update_sub_task'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/delete/', views.delete_sub_task, name='delete_sub_task'),
-    path('test123', views.test123, name='test123')
 ]

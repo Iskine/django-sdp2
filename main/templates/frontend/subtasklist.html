@@ -1,1 +1,91 @@
 
+{% extends 'frontend/sidebar.html' %}
+
+{% block title %} Sub Task List {% endblock %}
+
+{% block content %}
+
+<div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 pr-10 lg:px-8">
+    <div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white px-12">
+       
+        <h1 class="font-medium text-2xl text-gray-500 pb-10">Task: {{ task.title }}</h1>
+		
+        
+			
+            {% if is_team_member %}
+            <div><a href="{% url 'create_sub_task' task_id=task.id %}" class="rounded-md text-gray-600 bg-blue-300 py-3 px-2 font-medium text-sm hover:bg-indigo-300 hover:text-slate-400">Create New Sub Task</a></div>
+            {% endif %}
+        </div>
+    </div>
+	{% if sub_tasks %}
+	<h1 class="font-medium text-2xl text-gray-500 pb-10 ml-14">Sub Task List</h1>
+    <div class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
+	
+		<table class="min-w-full">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">ID</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Title</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Description</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Start Date</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">End Date</th>
+					<th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Created by</th>
+					<th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Status</th>
+                    <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider"></th>
+                  
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {% for sub_task in sub_tasks %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                            <div class="flex items-center">
+                                <div>
+                                    <div class="text-sm leading-5 text-gray-800">{{ sub_task.id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                            <div class="text-sm leading-5 text-blue-900">{{ sub_task.title }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">{{ sub_task.description }}</td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">  
+                            {{ sub_task.start_date }}
+                        </td>
+						<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">  
+                            {{ sub_task.end_date }}
+                        </td>
+                    
+						<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">{{ sub_task.created_by }}</td>
+						<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
+								{% if sub_task.completed %}
+									<span class="text-green-500">Completed</span>
+								{% else %}
+									<span class="text-yellow-500">Incomplete</span>
+								{% endif %}</td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">        
+                            {% if is_team_member %}                   
+                            <a href="{% url 'update_sub_task' project_id=project.id task_id=task.id sub_task_id=sub_task.pk %}">
+                                <button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">Edit</button>
+                            </a> 
+                            {% endif %}
+                        </td>
+                        
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+		
+</div>
+</div>
+
+    </div>
+	
+</div>
+{% else %}
+<p>No subtask created yet.</p>
+
+ 
+ 
+{% endif %}
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'frontend/sidebar.html' %}
+
+{% block title %} Update Project {% endblock %}
+
+{% block content %}
+
+
+        <section class="text-gray-600 body-font">
+            <div class="container px-5 py-1 mx-auto">
+              <div class="flex flex-wrap -m-29">
+
+                <div class="p-10 md:w-1/2 flex flex-col items-start">
+
+                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Update Project</span>
+                  <form method="POST" enctype="multipart/form-data" action="{% url 'update_project' project_id=project.pk %}">
+                    {% csrf_token %}
+                  <div class="pt-16">
+                    <label for="{{ form.name.auto_id }}" class="leading-7 text-sm text-gray-600">Project Name</label>
+                    <input type="text" id="{{ form.name.auto_id }}" 
+                    name="{{ form.name.html_name }}" 
+                    value="{{ form.name.value|default:'' }}" 
+                    {% if team_form.name.field.required %}required{% endif %} 
+                    placeholder="Django Project" 
+                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                    </input>
+                        {% if form.name.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.name.errors.as_text }}</p>
+                        {% endif %}
+                  </div>
+
+  
+                  <div class="pt-6">
+                    <label for="{{ form.status.auto_id }}" class="leading-7 text-sm text-gray-600">Task Status</label>
+                   <select name="{{ form.status.html_name }}" 
+                   id="{{ form.status.auto_id }}" 
+                   class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                   {% for choice in form.status.field.choices %}  
+                   <option value="{{choice.0}}" {% if form.status.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.0 }}</option>
+                   {% endfor %}   
+                   </select>  
+                </div>
+
+                  <div class="pt-6">
+                    <label for="{{ form.start_date.auto_id }}" class="leading-7 text-sm text-gray-600">Start Date</label>
+                    <input type="date" id="{{ form.start_date.auto_id }}" 
+                    name="{{ form.start_date.html_name }}" 
+                    value="{{ form.start_date.value|default:'' }}" 
+                   
+                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                    {% if team_form.start_date.field.required %}required{% endif %} 
+                </input>
+                        {% if form.start_date.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.start_date.errors.as_text }}</p>
+                        {% endif %} 
+                  </div>
+
+                  <div class="pt-6">
+                    <label for="{{ form.end_date.auto_id }}" class="leading-7 text-sm text-gray-600">Due Date</label>
+                    <input type="date" id="{{ form.end_date.auto_id }}" 
+                    name="{{ form.end_date.html_name }}" 
+                    value="{{ form.end_date.value|default:'' }}" 
+                    
+                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                    {% if team_form.end_date.field.required %}required{% endif %}     
+                </input>
+                        {% if form.end_date.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.end_date.errors.as_text }}</p>
+                        {% endif %} 
+                  </div>
+
+                  <div class="pt-6">
+                    <label for="{{ form.description.auto_id }}" class="leading-7 text-sm text-gray-600">Description</label>
+                    <textarea type="message" id="{{ form.description.auto_id }}"  
+                    name="{{ form.description.html_name }}"  
+                    value="{{ form.description.value|default:'' }}" 
+                 
+                    class="w-full h-20 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> </textarea>
+                    {% if team_form.description.field.required %}required{% endif %}   
+                </div>
+                    {% if form.description.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.description.errors.as_text }}</p>
+                    {% endif %} 
+
+                  <div class="mt-8">
+                    <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
+                        Update Project
+                    </button>
+                  </div>
+
+                </div>
+         
+
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                    
+                  <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Task Assignees</h2>
+                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+           
+                    <div class="pt-4">
+                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Add Team</div>
+                    </div>
+
+                    <div class="mt-2">
+                        <label for="{{ form.team.auto_id }}" class="leading-7 text-sm text-gray-600">Team</label>
+                        <select name="{{ form.team.html_name }}" 
+                        id="{{ form.team.auto_id}}" 
+                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                        {% for choice in form.team.field.choices %}
+                        <option value="{{ choice.0 }}" {% if form.team.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+
+                </div>
+            </div>
+   
+          </section>
+   
+
+{% endblock %}

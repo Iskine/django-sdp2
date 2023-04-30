@@ -79,3 +79,14 @@ class SubTask(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.task.update_percent_complete()
+
+
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user}: {self.content}"

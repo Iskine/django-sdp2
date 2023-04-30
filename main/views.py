@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm, ProjectForm, TaskForm, TeamForm, MembershipForm, SubTaskForm, CustomMyProfileUpdateForm, CustomUserForm ,CustomUserPasswordChangeForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import login, logout, authenticate
-from .models import Project, Task, Team, Membership, SubTask
+from .models import Project, Task, Team, Membership, SubTask, Comment
 from django.contrib.auth.models import User, Group
 from django.template import loader 
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest, Http404
@@ -311,14 +311,14 @@ def create_project(request):
     if user.groups.filter(name='team_member').exists() or user.groups.filter(name='team_leader').exists():
       
         if request.method == 'POST':
-            form = ProjectForm(request.user, request.POST)
+            form = ProjectForm(user=request.user, data=request.POST)
             if form.is_valid():
                 project = form.save(commit=False)
                 project.created_by = request.user
                 project.save()
                 return redirect('project_list')
         else:
-            form = ProjectForm(request.user)
+            form = ProjectForm(user=request.user)
         return render(request, 'frontend/createproject.html', {'form': form})
     else: 
          raise PermissionDenied
@@ -375,6 +375,9 @@ def project_details(request, project_id):
 
 
 
+
+
+
 # Update Project
 def update_project(request, project_id):
     user = request.user
@@ -383,13 +386,18 @@ def update_project(request, project_id):
         raise PermissionDenied
 
     if request.method == 'POST':
-        form = ProjectForm(request.POST, instance=project, user=user)
+        print(request.POST)
+        form = ProjectForm(data=request.POST, instance=project, user=user)
         if form.is_valid():
             form.save()
-            return redirect('project_details', pk=project.pk)
+            return redirect('project_details', project_id=project.pk)
     else:
         form = ProjectForm(instance=project, user=user)
-    return render(request, 'main/update_project.html', {'form': form, 'project': project})
+    return render(request, 'frontend/updateproject.html', {'form': form, 'project': project})
+
+
+
+
 
 # Delete project
 @login_required(login_url="/login")
@@ -403,7 +411,8 @@ def delete_project(request, project_id):
         project.delete()
         return redirect('project_list')
 
-    return render(request, 'main/delete_project.html', {'project': project})
+    return render(request, 'frontend/deleteproject.html', {'project': project})
+
 
 
 
@@ -426,7 +435,7 @@ def create_task(request, project_id):
             return redirect('task_list', project_id=project_id)
     else:
         form = TaskForm()
-    return render(request, 'main/create_task.html', {'form': form, 'project': project})
+    return render(request, 'frontend/createtask.html', {'form': form, 'project': project})
 
 
 
@@ -440,6 +449,23 @@ def task_list(request, project_id):
     is_team_member = request.user.groups.filter(name='team_member').exists()
     is_team_leader = request.user.groups.filter(name='team_leader').exists()
     return render(request, 'frontend/tasklist.html', {'project': project, 'tasks': tasks, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader})
+
+
+
+
+# Task details
+@login_required(login_url="/login")
+def task_details(request, project_id, task_id):
+    project = get_object_or_404(Project, pk=project_id)
+    task = get_object_or_404(Task, pk=task_id)
+    # Check if the current user is a team leader
+    is_team_leader = request.user.groups.filter(name='team_leader').exists()
+    # Check if the current user is a team member
+    is_team_member = request.user.groups.filter(name='team_member').exists()
+    return render(request, 'frontend/taskdetails.html', {'project': project, 'task': task, 'members': members, 'is_team_leader': is_team_leader, 'is_team_member':is_team_member})
+
+
+
 
 
 
@@ -464,7 +490,7 @@ def update_task(request, project_id, task_id):
             form = TaskForm(instance=task)
         is_team_member = request.user.groups.filter(name='team_member').exists()
         is_team_leader = request.user.groups.filter(name='team_leader').exists()
-        return render(request, 'main/update_task.html', {'task':task, 'form': form, 'project_id': project_id, 'task_id': task_id, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader})
+        return render(request, 'frontend/updatetask.html', {'task':task, 'form': form, 'project_id': project_id, 'task_id': task_id, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader})
     else:
         return HttpResponseForbidden()
 
@@ -488,7 +514,7 @@ def delete_task(request, project_id, task_id):
         task.delete()
         return redirect('task_list', project_id=project_id)
 
-    return render(request, 'main/delete_task.html', {'task':task, 'project_id': project_id, 'task_id': task_id, 'is_team_leader': is_team_leader})
+    return render(request, 'frontend/deletetask.html', {'task':task, 'project_id': project_id, 'task_id': task_id, 'is_team_leader': is_team_leader})
 
 
 
@@ -593,23 +619,27 @@ def create_sub_task(request, task_id):
         "task": task,
     }
 
-    return render(request, 'main/create_sub_task.html', context)
+    return render(request, 'frontend/createsubtask.html', context)
 
 
 
 @login_required(login_url="/login")
 def sub_task_list(request, project_id, task_id):
-
     project = get_object_or_404(Project, pk=project_id)
     task = get_object_or_404(Task, pk=task_id, project=project)
- 
+
     if not (request.user.groups.filter(name='team_member').exists() or request.user.groups.filter(name='team_leader').exists()):
         raise PermissionDenied
-
-
+    
     sub_tasks = SubTask.objects.filter(task=task)
 
-    return render(request, 'main/sub_task_list.html', {'sub_tasks': sub_tasks, 'project_id': project_id, 'task_id': task_id, 'project': project, 'task': task})
+    is_team_member = request.user.groups.filter(name='team_member').exists()
+
+    return render(request, 'frontend/subtasklist.html', {'sub_tasks': sub_tasks, 'project_id': project_id, 'task_id': task_id, 'project': project, 'task': task, 'is_team_member': is_team_member})
+
+
+
+
 
 
 
@@ -639,7 +669,7 @@ def update_sub_task(request, project_id, task_id, sub_task_id):
         'sub_task': sub_task,
     }
 
-    return render(request, 'main/update_sub_task.html', context)
+    return render(request, 'frontend/updatesubtask.html', context)
 
 
 
@@ -666,34 +696,7 @@ def delete_sub_task(request, sub_task_id, project_id, task_id):
         'sub_task': sub_task,
     }
 
-    return render(request, 'main/delete_sub_task.html', context)
-
-
-
-
-
-
-@login_required(login_url="/login")
-def test123(request):
-  user = request.user
-  if user.groups.filter(name='team_member').exists():
-        memberships = Membership.objects.filter(user=user)
-        teams = [membership.team for membership in memberships]
-        projects = Project.objects.filter(Q(team__in=teams) | Q(created_by=user))
-        can_create_project = True
-  elif user.groups.filter(name='team_leader').exists():
-        teams = Team.objects.filter(team_leader=user)
-        projects = Project.objects.filter(Q(team__in=teams) | Q(created_by=user))
-        can_create_project = True
-  elif user.groups.filter(name='team_manager').exists():
-        teams = Team.objects.all()
-        projects = Project.objects.filter(team__in=teams)
-        can_create_project = False
-  else:
-        projects = Project.objects.filter(created_by=user)
-        can_create_project = False
-  return render(request, 'main/project_list.html', {'projects':projects, 'can_create_project': can_create_project}) 
-
+    return render(request, 'frontend/deletesubtask.html', context)
 
 
 

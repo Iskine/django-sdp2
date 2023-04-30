@@ -15,7 +15,7 @@
 
                 <div class="p-10 md:w-1/2 flex flex-col items-start">
 
-                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Update New Team</span>
+                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Update Team</span>
                  
                   <form method="POST" action="{% url 'update_team' pk=team.pk %}" enctype="multipart/form-data">
                     {% csrf_token %}
