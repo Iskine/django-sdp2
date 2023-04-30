@@ -1,0 +1,34 @@
+{% extends 'frontend/sidebar-h-screen.html' %}
+
+{% block title %} Delete My Profile {% endblock %}
+
+{% block content %}
+
+<div class="text-gray-900 body-font">
+    <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
+
+    <div class="w-fit px-32 py-10 rounded-2xl shadow mt-10 mt-0">
+    <div class="flex flex-row justify-center">
+        <h1 class="text-3xl font-medium title-font mb-5">Delete My Account</h1>
+        </div>
+  
+        <p class="mb-10">Are you sure you want to delete {{ user.username }}?</p>
+       
+       
+        <div class="flex justify-center ">
+          <form method="POST" action="{% url 'delete_my_account' user.id %}">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 py-2 px-10 rounded-md font-medium hover:bg-red-700 hover:text-black">Delete Account</button>
+          </form>
+          
+        </div>
+  
+        <div class="flex justify-center mt-10">
+           <a href="{% url 'my_profile' %}" class="bg-blue-400 py-2 px-10 rounded-md font-medium hover:bg-blue-300 hover:text-blue-700">Cancel</a> 
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

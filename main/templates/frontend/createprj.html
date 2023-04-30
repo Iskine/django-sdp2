@@ -1,0 +1,63 @@
+{% extends 'frontend/sidebar.html' %}
+
+{% block content %}
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900 mb-5">Create Project</h2>
+                <form method="POST" action="{% url 'create_project' %}">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.name.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.description.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="start_date" class="block text-gray-700 font-bold mb-2">Start Date</label>
+                        {{ form.start_date }}
+                        {% if form.start_date.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.start_date.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="end_date" class="block text-gray-700 font-bold mb-2">End Date</label>
+                        {{ form.end_date }}
+                        {% if form.end_date.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.end_date.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="status" class="block text-gray-700 font-bold mb-2">Status</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.status.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="team" class="block text-gray-700 font-bold mb-2">Team</label>
+                        {{ form.team }}
+                        {% if form.team.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.team.errors.as_text }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center justify-end mt-6">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

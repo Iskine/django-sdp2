@@ -1,12 +1,12 @@
 {% extends 'main/base.html' %}
 {% block title %} User Profile Details {% endblock %}
 
-{% load crispy_forms_tags %}
+{% load static tailwind_tags %}
 {% block content %} 
 
 <h1>User Profile Details</h1>
  
-<h3>Username: {{ memberdetails.username}}</h3>
+<h3>Username: {{ memberdetails.username }}</h3>
 <h3>Name: {{ memberdetails.first_name }} {{ memberdetails.last_name }}</h3>
 {% for group in memberdetails.groups.all %}
     <h4> Role: {{ group.name }}</h4>
@@ -26,4 +26,5 @@
 
 {% endblock %}
  
+
 

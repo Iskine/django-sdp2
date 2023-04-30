@@ -1,0 +1,106 @@
+{% extends 'frontend/sidebar.html' %}
+
+{% block title %} User Details {% endblock %}
+
+{% block content %}
+
+<form class="text-gray-900 body-font">
+    <div class="container px-5 mx-auto flex flex-wrap items-center justify-center">
+
+    <div class="w-screen px-10 py-10 rounded-2xl shadow mt-10 mt-0 bg-gray-100">
+    <div class="flex flex-row justify-center ">
+        <h1 class="text-3xl font-medium title-font mb-8">User Details</h1>
+        </div>
+    <label class="block">
+
+    
+        <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Username</h3>
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Name</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">{{ memberdetails.username }}</h3>
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4 ">{{ memberdetails.first_name }} {{ memberdetails.last_name }}</h3>
+                  <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Email</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">{{ memberdetails.email }}</h3>
+                    <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+
+          <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Role</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  {% for group in memberdetails.groups.all %}
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">
+                    {{ group.name }}</h3>
+                  {% empty %}
+                    <p>No role.</p>
+                  {% endfor %}
+                    <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <div class="flex justify-center pt-10 ">
+          {% if user.is_staff %}
+   
+        <a href="{% url 'update_user' memberdetails.id %}" class="bg-indigo-400 py-2 px-10 rounded-md font-medium hover:bg-indigo-300 hover:text-indigo-700">Edit</a>  
+        <div class="m-2"></div>
+        <a href="{% url 'change_user_password' memberdetails.id %}" class="bg-yellow-400 py-2 px-10 rounded-md font-medium hover:bg-yellow-300 hover:text-yellow-700">Change Password</a>  
+        <div class="m-2"></div>
+        <a href="{% url 'delete_user' memberdetails.id%}" class="bg-red-500 py-2 px-10 rounded-md font-medium hover:bg-red-700 hover:text-black">Delete User</a>  
+        
+          {% endif %}
+          <div class="m-2"></div>
+        <a href="/members" class="bg-blue-400 py-2 px-10 rounded-md font-medium hover:bg-blue-300 hover:text-blue-700">Cancel</a>  
+      </div>
+    </label> 
+</div>
+</div>
+</div>
+</div>
+</form>
+
+
+{% endblock %}

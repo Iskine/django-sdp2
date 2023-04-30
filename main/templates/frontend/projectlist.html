@@ -1,0 +1,66 @@
+{% extends 'frontend/sidebar-h-screen.html' %}
+
+
+{% block title %} Project List {% endblock %}
+
+{% block content %}
+
+
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-2 mx-auto ">
+      
+      <div class="pb-10">
+          <h1 class="text-2xl">Project Lists</h1>
+        <div class="flex flex-row-reverse mr-16">
+          <button class="bg-blue-300 p-2 rounded-md font-medium text-sm hover:bg-indigo-300">Create Project</button>
+        </div>
+      </div>
+     
+  <div class="pb-20 m-auto"></div>
+
+    <div class="-my-8 divide-y-2 divide-gray-100 ">
+
+      {% for x in projects %}
+      <div class="py-8 flex flex-wrap md:flex-nowrap">
+        <div class="md:w-64 md:mb-0 mb-6 ">
+          <span class="text-gray-500 text-sm">Status</span>
+          <span class="mt-1 text-gray-600 font-semibold title-font">{{ x.status }}</span>
+          <div>
+            <span class="text-gray-500 text-sm">Team</span>
+            <span class="mt-1 text-gray-600 font-semibold title-font">
+              {% if x.team %}
+              {{ x.team.name }}
+            {% else %}
+              No team Assigned
+            {% endif %}
+            </span>
+          </div>
+        </div>
+
+
+        <div class="md:flex-grow">
+          <a class="text-2xl font-medium text-gray-900 title-font mb-2 hover:text-gray-500" href="  {% url 'project_details' project_id=x.pk %}">{{ x.name }}</a>
+        </div>
+
+
+        <a href="{% url 'task_list' x.id %}"><button class="rounded-md bg-gray-200 py-1 px-2 text-sm hover:bg-gray-300 mr-6">Project Task > </button></a>
+       
+      </div>
+     
+      {% empty %}
+      <p>No projects found.</p>
+    {% endfor %}
+      
+      <div class="py-8 flex" >
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi expedita ut laboriosam natus quod facilis cum vero nostrum rem dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. </p>
+      </div>
+     
+    
+</div>
+
+</div>
+
+</section>
+   
+
+{% endblock %}

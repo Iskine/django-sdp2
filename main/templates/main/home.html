@@ -1,10 +1,17 @@
 {% extends 'main/base.html' %}
 
+{% load static tailwind_tags %}
+
+
+{% tailwind_css %}
+
+
 {% block title %}Home Page{% endblock %}
 {% block content %}
 
+
 {% for post in posts %}
-<div class="card mt-2 ">
+<div class="card mt-2">
    
     <div class="card-header"><a href="members/details/{{ post.author.id }}"><strong>@{{ post.author.username }}</strong></a></div>
     <div class="card-body d-flex flex-row justify-content-between">
@@ -36,7 +43,7 @@
 
 
 {% empty %}
-<p>No post yet</p>
+<p class="text-blue-300">No post yet</p>
 {% endfor %}
 {% endblock %}
 

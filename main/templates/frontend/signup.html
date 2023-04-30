@@ -1,0 +1,81 @@
+{% extends 'frontend/navbar.html' %}
+
+{% block content %}
+
+<form class="text-gray-900 body-font" method="post">
+    {% csrf_token %}
+
+    <div class="container px-5 py-10 mx-auto flex flex-wrap items-center justify-center">
+      <div class="w-fit px-44 py-5 rounded-2xl shadow mt-10 mt-0">
+        <div class="flex flex-row justify-center">
+          <h1 class="text-3xl font-medium title-font mb-5">Sign Up</h1>
+        </div>
+        <div class="mb-4 ">
+          <label for="{{ form.first_name.id_for_label }}" class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Firstname
+          </label>
+          {{ form.first_name }}
+        </div>
+        <div class="mb-4 ">
+          <label for="{{ form.last_name.id_for_label }}" class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Lastname 
+          </label>
+          {{ form.last_name }} 
+        </div>
+        <div class="mb-4 ">
+          <label for="{{ form.username.id_for_label }}" class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Username 
+          </label>
+          {{ form.username }}
+        </div>
+        <div class="mb-4 ">
+          <label for="{{ form.email.id_for_label }}" class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Email 
+          </label>
+          {{ form.email }}
+            {% if form.email.errors %}
+                <div class="error-messages">
+                    {% for error in form.email.errors %}
+                        <p class="text-red-500 ">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-4 ">
+          <label for="{{ form.password1.id_for_label }}" class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Password 
+          </label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+          <div class="error-messages">
+              {% for error in form.password1.errors %}
+                  <p class="text-red-500 ">{{ error }}</p>
+              {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="mb-4 ">
+          <label for="{{ form.password2.id_for_label }}" class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Re-type Password
+          </label>
+          {{ form.password2 }}
+            {% if form.password2.errors %}
+            <div class="error-messages">
+                {% for error in form.password2.errors %}
+                    <p class="text-red-500 ">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="flex justify-center">
+          <button type="submit" class="bg-indigo-400 py-2 px-10 rounded-md font-medium hover:bg-indigo-300 hover:text-indigo-700">Sign Up</button>
+       </div>
+
+
+</div>
+</div>
+</form>
+
+
+{% endblock %}

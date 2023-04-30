@@ -1,0 +1,164 @@
+{% extends 'frontend/navbar.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<!-- first picture -->
+<section class="text-gray-600 body-font">
+<div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+  <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+  <h1 class="title-font sm:text-5xl text-3xl mb-4 font-medium text-gray-900">Before they sold out</h1>
+  <p class="mb-8 leading-relaxed text-2xl">Copper mug try-hard pitchfork pour-over freegan heirloom neutra air plant cold-pressed tacos poke beard tote bag. Heirloom echo park mlkshk tote bag selvage hot chicken authentic tumeric truffaut hexagon try-hard chambray.</p>
+  <div class="flex justify-center">
+    {% if user.is_authenticated %}
+    <a href="/project_list"> <button class="inline-flex text-white bg-indigo-500 border-0 py-3 px-10 focus:outline-none hover:bg-indigo-600 rounded text-2xl">My Project</button></a>
+    {% else %}
+    <a href="/login"> <button class="inline-flex text-white bg-indigo-500 border-0 py-3 px-10 focus:outline-none hover:bg-indigo-600 rounded text-2xl">Start</button></a>
+    {% endif %}
+  </div>
+</div>
+  <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
+    <img class="object-cover object-center rounded" src="https://dummyimage.com/720x600">
+  </div>
+</div>
+</section>
+
+<!-- what are we providing -->
+<section>
+<div class="container px-5 py-24 mx-auto">
+  <div class="text-center mb-20">
+  <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900 mb-4">What Are We Providing</h1>
+    <div class="flex mt-6 justify-center">
+      <div class="w-16 h-1 rounded-full bg-indigo-500 inline-flex"></div>
+    </div>
+  </div>
+  <div class="items-center justify-center flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
+    
+    <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
+      <div class= "w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0">
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10" viewBox="0 0 24 24">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+      </div>
+  <div class="flex-grow">
+  <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Shooting Stars</h2>
+  <p class="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar toast</p>
+</div>
+</div>
+
+<div class="p-4 md:w-1/3 flex flex-col text-center items-center">   
+  <div class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0">
+    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10" viewBox="0 0 24 24">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+    </svg>
+  </div>
+
+<div class="flex-grow">
+<h2 class="text-gray-900 text-lg title-font font-medium mb-3">Shooting Stars</h2>
+<p class="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar toast</p>
+</div>
+</div>
+
+<div class="p-4 md:w-1/3 flex flex-col text-center items-center">   
+  <div class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0">
+    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10" viewBox="0 0 24 24">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+    </svg>
+  </div>
+
+<div class="flex-grow">
+<h2 class="text-gray-900 text-lg title-font font-medium mb-3">Shooting Stars</h2>
+<p class="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar toast</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- small picture 1 -->
+<section class="text-gray-600 body-font">
+<div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+
+  <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
+    <img class="object-cover object-center rounded" src="https://dummyimage.com/720x600">
+  </div>
+
+  <div class="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+  <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">Before they sold out</h1>
+  <p class="mb-8 leading-relaxed">Copper mug try-hard pitchfork pour-over freegan heirloom neutra air plant cold-pressed tacos poke beard tote bag. Heirloom echo park mlkshk tote bag selvage hot chicken authentic tumeric truffaut hexagon try-hard chambray.</p>
+</div>
+</div>
+</section>
+  
+<!-- small picture 2 -->
+<section class="text-gray-600 body-font">
+  <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+    
+    <div class="md:hidden lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
+      <img class="object-cover object-center rounded" src="https://dummyimage.com/720x600">
+    </div>
+    
+    <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+    <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">Before they sold out</h1>
+    <p class="mb-8 leading-relaxed">Copper mug try-hard pitchfork pour-over freegan heirloom neutra air plant cold-pressed tacos poke beard tote bag. Heirloom echo park mlkshk tote bag selvage hot chicken authentic tumeric truffaut hexagon try-hard chambray.</p>
+  </div>
+  
+  <div class="invisible md:visible lg:max-w-lg lg:w-full sm:w-1/2 w-5/6 sm:mb-0">
+    <img class="md:h-full md:w-full object-cover object-center rounded h-0 w-0" src="https://dummyimage.com/720x600">
+  </div>
+  
+</div>
+</section>
+
+  <!-- small picture 3 -->
+<section class="text-gray-600 body-font">
+  <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+  
+    <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
+      <img class="object-cover object-center rounded" src="https://dummyimage.com/720x600">
+    </div>
+  
+    <div class="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+    <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">Before they sold out</h1>
+    <p class="mb-8 leading-relaxed">Copper mug try-hard pitchfork pour-over freegan heirloom neutra air plant cold-pressed tacos poke beard tote bag. Heirloom echo park mlkshk tote bag selvage hot chicken authentic tumeric truffaut hexagon try-hard chambray.</p>
+  </div>
+  </div>
+</section>
+    
+<!-- footer -->
+<footer class="text-gray-600 body-font bg-indigo-200">
+  <div class="container px-5 py-16 mx-auto flex items-center sm:items-center lg:flex-row flex-col">
+
+    <div class="items-center flex flex-col">
+    <img class="w-30 h-16 p-2 mb-2 rounded-3xl" src="../static/css/dist/logo.png">
+    
+    <div class="flex items-center md:justify-start justify-center text-gray-900">
+      <p class="">Senior Development Project</p>
+      <div class="sm:ml-2 sm:pl-2 sm:border-l-2 sm:border-gray-900 sm:py-2 sm:mt-0 mt-4"></div>
+      <p class="sm:pl-2 text-gray-700">© 2023 SDP - Nusara Boonma</p>
+    </div>
+  </div>
+      
+   
+
+    <span class="flex flex-wrap sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
+      <a class="text-gray-500 pr-4">
+        <p class="text-lg">Privacy Policy</p>
+      </a>
+      <a class="text-gray-500 pr-4">
+        <p class="text-lg">Terms & Conditions</p>
+      </a>
+      <a class="text-gray-500 pr-4">
+        <p class="text-lg">Cookie Policy</p>
+      </a>
+      <a class="text-gray-500 pr-4">
+        <p class="text-lg">Contact</p>
+      </a>
+    </span>
+
+ 
+  </div>
+</footer>
+
+{% endblock %}

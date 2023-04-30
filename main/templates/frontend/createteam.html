@@ -1,0 +1,95 @@
+{% extends 'frontend/sidebar.html' %}
+
+{% block title %} Create Team {% endblock %}
+
+{% block content %}
+{% with team_form.name as team_name_field %}
+{% with team_form.team_leader as team_leader_field %}
+{% with team_form.team_manager as team_manager_field %}
+{% with membership_form.members as team_members_field %}
+
+
+<form method="POST" action="{% url 'create_team' %}" enctype="multipart/form-data">
+
+{% csrf_token %}
+        <section class="text-gray-600 body-font">
+            <div class="container px-5 py-1 mx-auto">
+              <div class="flex flex-wrap -m-29">
+
+                <div class="p-10 md:w-1/2 flex flex-col items-start">
+
+                  <span class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create New Team</span>
+                 
+                 
+                  <div class="pt-16">
+                    <label for="{{ team_form.name.auto_id }}" class="leading-7 text-sm text-gray-600">Team Name</label>
+                    <input type="text" id="{{ team_form.name.auto_id }}" name="{{ team_form.name.html_name }}" placeholder="Team 1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" 
+                    value="{{ team_form.name.value|default:'' }}" {% if team_form.name.field.required %}required{% endif %}></input>
+                </div>
+             
+                  <div class="mt-8">
+                    <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200 hover:bg-gray-600">
+                        Create Team
+                    </button>
+                  </div>
+
+                </div>
+                
+
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+
+                  <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Team Assignee</h2>
+                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+                
+                  <div class="">
+                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Team Manager</div>
+                  </div>
+
+                  <div class="mt-2">
+                    <label for="{{ team_form.team_manager.auto_id }}" class="leading-7 text-sm text-gray-600">Team Manager</label>
+                    <select name="{{ team_form.team_manager.html_name }}" id="{{ team_form.team_manager.auto_id }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                      {% for choice in team_form.team_manager.field.choices %}
+                      <option value="{{ choice.0 }}" {% if team_form.team_manager.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                    <div class="pt-10">
+                      <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Team Leader</div>
+                    </div>
+
+                    <div class="pt-2">
+                      <label for="{{ team_form.team_leader.auto_id }}" class="leading-7 text-sm text-gray-600">Team Leader</label>
+                      <select name="{{ team_form.team_leader.html_name }}" id="{{ team_form.team_leader.auto_id }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                          {% for choice in team_form.team_leader.field.choices %}
+                              <option value="{{ choice.0 }}" {% if team_form.team_leader.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+
+                  <div class="pt-10">
+                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Team Member</div>
+                </div>
+
+                  <div class="pt-2">
+                    <label for="{{ membership_form.members.auto_id }}" class="leading-7 text-sm text-gray-600">Team Members</label>
+                    <select multiple name="{{ membership_form.members.html_name }}" id="{{ membership_form.members.auto_id }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-20 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                        {% for choice in membership_form.members.field.choices %}
+                            <option value="{{ choice.0 }}" {% if choice.0|stringformat:'s' in membership_form.members.value %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                    
+                </div>
+            </div>
+          
+          </section>
+        
+      </form>
+
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %}

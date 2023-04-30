@@ -1,0 +1,66 @@
+{% extends 'frontend/navbar.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+<html>
+    <script>
+        function clearLoginForm() {
+          var loginForm = document.getElementById("login-form");
+          loginForm.reset();
+        }
+    </script>
+        
+<body onload="clearLoginForm()">
+
+<form method="post" class="text-gray-900 body-font" id="login-form">
+    {% csrf_token %}
+    <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+    
+        <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+            <h1 class="title-font font-medium text-3xl tex-gray-900">Slow-carb next level shoindcgoitch ethical authentic, poko scenester</h1>
+            <p class="leading-relaxed mt-4">Poke slow-carb mixtape knausgaard, typewriter street art gentrify hammock starladder roathse. Craies vegan tousled etsy austin.</p>
+        </div>
+
+    <div class="w-full p-10 rounded-2xl shadow lg:w-2/6 md:w-1/2 flex flex-col md:ml-auto mt-10 md:mt-0">
+    <div class="flex flex-row justify-center">
+        <h1 class="text-3xl font-medium title-font mb-5">Login</h1>
+        </div>
+
+     
+    <label class="block">
+        <span class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Username 
+        </span>
+        <input type="text" name="username" class="transition-colors duration-300 ease-in mt-1 pl-2 px-10 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-sky-500 w-full rounded-md sm:text-md focus:ring-1 mb-4" placeholder="Username" required />
+    
+        <span class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+            Password
+        </span>
+        <input type="password" name="password" class="transition-colors duration-300 ease-in mt-1 pl-2 px-10 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-sky-500 w-full rounded-md sm:text-md focus:ring-1 mb-4" placeholder="Password" required/>
+    
+        <div class="flex justify-center">
+            <input type="hidden" name="next" value="/"  />
+            <button type="submit" class="bg-indigo-400 py-2 px-10 rounded-md font-medium hover:bg-indigo-300 hover:text-indigo-700">Login</button>
+        </div>
+        <div class="text-red-600">
+            {{ form.non_field_errors }}
+        
+        </div>
+        <p class="mt-2 text-indigo-500"><a href="/password_reset">Forget Password?</a></p>
+        <div class="bottom-0 md:bottom-52 md:right-40"><p class="">Don't have an account? Sign Up <a class="text-indigo-500" href="/signup">Here</a>!</p></div>
+
+    </label>
+   
+    
+</div>
+
+</div>
+</div>
+</div>
+</form>
+</body>
+</html>
+{% endblock %}
+
+.

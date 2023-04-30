@@ -1,0 +1,133 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/dist/output.css" rel="stylesheet">
+    <title>Task Details</title>
+    {% tailwind_css %}
+</head>
+<body>
+
+<!-- navbar -->
+<header class="text-gray-600 body-font border-b-2">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+      <a class="flex little-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+        <img class="w-32 h-30 p-2 mb-2 rounded-3xl" src="../static/css/dist/logo.png">
+        <span class="ml-3 text-xl">SENIOR DEVELOPMENT PROJECT</span>
+      </a>
+      <nav class="md:ml-auto flex flex-wrap text-xl font-medium">
+        <button class="ml-2 mr-5 hover:text-gray-400">Logout</button>
+      </nav>
+    </div>
+</header>
+
+<form class="text-gray-900 body-font ">
+    <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
+
+    <div class="w-fit px-10 py-10 rounded-2xl shadow mt-10 mt-0 bg-gray-100">
+    <div class="flex flex-row justify-center ">
+        <h1 class="text-3xl font-medium title-font mb-8">this will be task name</h1>
+        </div>
+    <label class="block">
+
+    
+        <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Name</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">task1</h3>
+                  <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Description</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4"> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure, quasi autem. Praesentium quo saepe ipsa accusamus aliquid velit natus impedit voluptate! Fugiat, earum officiis doloribus ratione tempora temporibus porro consectetur. </h3>
+                    <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Start date</h3>
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">End date</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">20 June 2017</h3>
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">04 October 2019</h3>
+                    <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
+            <div class="container px-5 py-10 mx-auto">
+              <div class="flex flex-wrap -m-12">
+               
+                <div class="p-12 md:w-1/2 flex flex-col items-start">
+                  <h3 class="sm:text-xl text-xl title-font font-bold text-gray-900 mt-4 mb-4">Status</h3>
+                   <div class="mt-auto w-full">
+                   </div>
+                </div>
+
+                <div class="p-12 md:w-1/2 flex flex-col items-end">
+                  <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">active/complete</h3>
+                    <div class=" mt-auto w-full">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+
+        <div class="flex justify-center pt-10">
+        <button class="bg-indigo-400 py-2 px-10 rounded-md font-medium hover:bg-indigo-300 hover:text-indigo-700">Edit</button>
+        </div>
+    </label> 
+</div>
+</div>
+</div>
+</div>
+</form>
+
+
+
+</body>
+</html>

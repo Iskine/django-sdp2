@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('home', views.home, name='home'),#home page
-    path('signup', views.sign_up, name='sign_up'),#register form
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.sign_up, name='sign_up'),#register form
     path('my_profile/', views.my_profile, name='my_profile'), #display account owner's profile
     path('update_my_profile/', views.update_my_profile, name='update_my_profile'),#update profile by an account owner
     path('members/', views.members, name='members'),#display all the users in list
@@ -30,6 +31,6 @@ urlpatterns = [
     path('tasks/<int:task_id>/create_sub_task/', views.create_sub_task, name='create_sub_task'),
     path('project/<int:project_id>/tasks/<int:task_id>/sub_task_list/', views.sub_task_list, name='sub_task_list'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/update/', views.update_sub_task, name='update_sub_task'),
-    path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/delete/', views.delete_sub_task, name='delete_sub_task')
-
+    path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/delete/', views.delete_sub_task, name='delete_sub_task'),
+    path('test123', views.test123, name='test123')
 ]

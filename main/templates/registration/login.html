@@ -1,11 +1,13 @@
-{% extends 'main/base.html' %}
-{% block title %} login {% endblock %}
+{% extends 'frontend/navbar.html' %}
+{% block title %} Login {% endblock %}
 
-{% load crispy_forms_tags %}
+{% load static tailwind_tags %}
 
-{% block content %} 
+{% tailwind_css %}
+
+{% block content %}
 <form method="post">
-    {% csrf_token %}{{form|crispy}}
+    {% csrf_token %}
     <p>Don't have an account? Create one <a href="/signup">Here</a>!</p>
     <button type="submit" class="btn btn-success">Login</button>
     <p><a href="/password_reset">Forget Password?</a></p>
