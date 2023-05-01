@@ -1,113 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../dist/output.css">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'frontend/sidebar.html' %}
+
+{% block title %} Comments {% endblock %}
+
+{% block content %}
 
 
-
-    <section class="flex w-screen h-screen p-10">
-
-        <!-- Component Start -->
-        <div class="flex flex-col items-center w-16 h-screen overflow-hidden text-gray-700 bg-gray-100 rounded mr-6">
-            
-            <a class="flex items-center justify-center mt-3" href="#">
-                <img src="../static/css/dist/logo.png" alt="logo">
-            </a>
-            <div class="flex flex-col items-center mt-3 border-t border-gray-300">
-                <a class="flex items-center justify-center w-12 h-12 mt-2 rounded hover:bg-gray-300" href="#">
-                    <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                </a>
-                <a class="flex items-center justify-center w-12 h-12 mt-2 rounded hover:bg-gray-300" href="#">
-                    <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </a>
-                <a class="flex items-center justify-center w-12 h-12 mt-2 bg-gray-300 rounded" href="#">
-                    <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </a>
-                <a class="hidden flex items-center justify-center w-12 h-12 mt-2 rounded hover:bg-gray-300" href="#">
-                    <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                    </svg>
-                </a>
-            </div>
-            <div class=" flex flex-col items-center mt-2 border-t border-gray-300">
-                <a class="hidden flex items-center justify-center w-12 h-12 mt-2 rounded hover:bg-gray-300" href="#">
-                    <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </a>
-                <a class="hidden flex items-center justify-center w-12 h-12 mt-2 rounded hover:bg-gray-300" href="#">
-                    <svg class="w-6 h-6 stroke-current"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
-                </a>
-                <a class="hidden relative flex items-center justify-center w-12 h-12 mt-2 hover:bg-gray-300" href="#">
-                    <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                    </svg>
-                    <span class="absolute top-0 left-0 w-2 h-2 mt-2 ml-2 bg-indigo-500 rounded-full"></span>
-                </a>
-            </div>
-            <a class="flex items-center justify-center w-16 h-16 mt-auto bg-gray-200 hover:bg-gray-300" href="#">
-                <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </a>
-        </div>
-       
-       <!-- Component End  -->
 
        <section class="text-gray-600 body-font">
         <div class="container px-5 py-2 mx-auto">
             
-            <div class="pb-10">
-                <h1 class="text-2xl">Project 1</h1>
+            <div class="pb-5">
+                <h1 class="text-2xl">Comment/log</h1>
             </div>
 
 
-            <section class="text-gray-600 body-font">
-                <div class="container pl-10">
-                  <div class="flex mx-auto flex-wrap mb5">
-                    <a class="sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none border-gray-200 hover:text-gray-900 tracking-wider">
-                        <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                          <circle cx="12" cy="5" r="3"></circle>
-                          <path d="M12 22V8M5 12H2a10 10 0 0020 0h-3"></path>
-                        </svg> -->First Link
-                      </a>
-                    
-                    <a class="sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none border-gray-200 hover:text-gray-900 tracking-wider">
-                      <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                      </svg>-->Second Link 
-                    </a>
-                    <a class="sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-medium bg-gray-100 inline-flex items-center leading-none border-indigo-500 text-indigo-500 tracking-wider rounded-t">
-                        <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        </svg>-->Third Link 
-                      </a>
-                  </div>
-                </div>
-            </section>
+        
 
-
+            
     <section class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto w-screen">
           <div class="flex flex-wrap -m-4 flex-col">
             <div class="p-4">
               <div class="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
                 
+
+
+                <div><!-- User actions will be displayed here -->
                 <div class="p-6">
+                  <button class="action-button" data-action="Performed Action 1">Action 1</button>
+                  <button class="action-button" data-action="Performed Action 2">Action 2</button>
+                  <button class="action-button" data-action="Performed Action 3">Action 3</button>
+                  <button id="clear-all" class="bg-red-500 text-white rounded-md px-4 py-2 hover:bg-red-600">Clear All</button>
+
+                  <div id="user-actions-container"><!-- User actions will be displayed here --></div>
+
                   <h2 class="tracking-widest text-xs title-font font-medium text-gray-400 mb-1 justify-center flex">CATEGORY</h2>
                   <h1 class="title-font text-lg font-medium text-gray-900 mb-3">The Catalyzer</h1>
                   <p class="leading-relaxed mb-3">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
@@ -133,68 +59,131 @@
                 </div>
               </div>
             </div>
-            <div class="p-4 ">
-              <div class="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
-                <div class="p-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-lg font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-3">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <div class="flex items-center flex-wrap">
-                    <a class="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More
-                      <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"></path>
-                        <path d="M12 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                    <span class="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
-                      <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>1.2K
-                    </span>
-                    <span class="text-gray-400 inline-flex items-center leading-none text-sm">
-                      <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
-                      </svg>6
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="p-4 ">
-              <div class="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
-                <div class="p-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-lg font-medium text-gray-900 mb-3">Shooting Stars</h1>
-                  <p class="leading-relaxed mb-3">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <div class="flex items-center flex-wrap ">
-                    <a class="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More
-                      <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"></path>
-                        <path d="M12 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                    <span class="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
-                      <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>1.2K
-                    </span>
-                    <span class="text-gray-400 inline-flex items-center leading-none text-sm">
-                      <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
-                      </svg>6
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          </div>
+
+
+
+
           </div>
         </div>
       </section>
 
       </div>
-      </section>
 
-</body>
-</html>
+
+
+
+
+
+<!-- start log function  -->
+<button class="action-button" data-action="Performed Action 1">Action 1</button>
+<button class="action-button" data-action="Performed Action 2">Action 2</button>
+<button class="action-button" data-action="Performed Action 3">Action 3</button>
+
+
+<div id="user-actions-container"><!-- User actions will be displayed here --></div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include custom JavaScript code -->
+<script src="js/custom.js"></script>
+<script>
+$(document).ready(function() {
+    // Load saved actions from local storage
+    loadUserActions();
+
+    $(".action-button").click(function() {
+        const action = $(this).data("action");
+        const timestamp = new Date().toLocaleString();
+        const actionResult = $("<div></div>").addClass("bg-white shadow rounded-md p-4 mb-4").html(`
+            <h3 class="text-xl font-semibold mb-2">${action}</h3>
+            <p>Performed on: ${timestamp}</p>
+        `);
+        $("#user-actions-container").prepend(actionResult);
+        saveUserAction(actionResult); // Save the action result to local storage
+    });
+
+    // Add this click event for the "Clear All" button
+    $("#clear-all").click(function() {
+        $("#user-actions-container").empty();
+        localStorage.removeItem('userActions');
+    });
+
+});
+
+// Save user action to local storage
+function saveUserAction(actionBlock) {
+    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
+    actions.push({
+        html: actionBlock.html(),
+        className: actionBlock.attr('class')
+    });
+    localStorage.setItem('userActions', JSON.stringify(actions));
+}
+
+// Load user actions from local storage
+function loadUserActions() {
+    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
+    actions.forEach((actionData) => {
+        const actionBlock = $('<div>').html(actionData.html).attr('class', actionData.className);
+        $('#user-actions-container').prepend(actionBlock);
+    });
+}
+
+
+</script>       
+
+<!-- end log function -->
+
+
+
+
+
+
+
+<!-- start comment function  -->
+
+<div id="user-actions-container">
+  <!-- User actions will be displayed here -->
+
+
+</div>
+
+<script>
+$(document).ready(function() {
+// Function to log user actions
+function logUserAction(action) {
+const actionTimestamp = new Date();
+const actionText = actionTimestamp.toLocaleString() + ': ' + action;
+$('#user-actions-container').append('<div>' + actionText + '</div>');
+}
+
+// Listen for click events on buttons or other elements
+$('button').click(function() {
+const buttonText = $(this).text();
+logUserAction('Clicked button: ' + buttonText);
+});
+
+// Listen for other events and log them
+// For example, when a user submits a form
+$('form').submit(function(e) {
+e.preventDefault();
+logUserAction('Submitted a form');
+});
+
+// Add other event listeners as needed
+});
+
+
+</script>
+
+<!-- end comment function  -->
+
+
+
+
+
+
+{% endblock %}
+

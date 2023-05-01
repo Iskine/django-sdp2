@@ -82,9 +82,12 @@
                     {% endif %} 
 
                   <div class="mt-8">
-                    <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
-                        Create Project
-                    </button>
+                    <div id='create-project-button' data-action="Performed: Advisor Created Project">
+                      <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
+                          Create Project
+                      </button>
+                  </div>
+                  
                   </div>
 
                 </div>
@@ -116,4 +119,57 @@
           </section>
    
 
+
+
+
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include custom JavaScript code -->
+<script src="js/custom.js"></script>
+<script>
+$(document).ready(function() {
+    // Load actions from the server
+    loadUserActions();
+
+    $(".action-button").click(function() {
+        const action = $(this).data("action");
+        const timestamp = new Date().toLocaleString();
+        saveUserAction(action, timestamp);
+    });
+
+    // Add this click event for the "Clear All" button
+    $("#clear-all").click(function() {
+        $("#user-actions-container").empty();
+    });
+
+    $("#create-project-button").click(function () {
+        const teamSelect = $("select[name='team']");
+        if (teamSelect.val() !== "") {
+            const action = "Performed: Advisor Created Project";
+            const timestamp = new Date().toLocaleString();
+            saveUserAction(action, timestamp);
+        }
+    });
+});
+
+// Save user action to the server
+function saveUserAction(action, timestamp) {
+    $.post("/save_user_action/", { action: action }, function(response) {
+        if (response.status === "success") {
+            loadUserActions();
+        }
+    });
+}
+
+// Load user actions from the server
+function loadUserActions() {
+    $.get("/get_team_user_actions/", function(data) {
+        $("#user-actions-container").html(data);
+    });
+}
+
+
+</script>    
 {% endblock %}

@@ -7,9 +7,10 @@
 
 
 <form class="text-gray-900 body-font ">
-    <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
+  <a href="{% url 'task_list' project_id=project.id %}"><div class="px-3 bg-indigo-300 w-fit rounded-lg py-1 hover:bg-indigo-400">< back</div></a> 
+  <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
       
-      <div class="w-screen px-10 py-10 mt-10 mt-0">
+      <div class="w-screen px-10 py-1 mt-10 mt-0">
         <h1 class="font-medium text-2xl text-gray-">Task Details</h1>
         <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
 

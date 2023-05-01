@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm, ProjectForm, TaskForm, TeamForm, MembershipForm, SubTaskForm, CustomMyProfileUpdateForm, CustomUserForm ,CustomUserPasswordChangeForm
+from .forms import RegisterForm, ProjectForm, TaskForm, TeamForm, MembershipForm, SubTaskForm, CustomMyProfileUpdateForm, CustomUserForm ,CustomUserPasswordChangeForm, CommentForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import login, logout, authenticate
-from .models import Project, Task, Team, Membership, SubTask, Comment
+from .models import Project, Task, Team, Membership, SubTask, Comment, UserAction
 from django.contrib.auth.models import User, Group
 from django.template import loader 
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest, Http404
@@ -699,16 +699,51 @@ def delete_sub_task(request, sub_task_id, project_id, task_id):
     return render(request, 'frontend/deletesubtask.html', context)
 
 
+def comment(request):
+    user = request.user
+    user_teams = user.teams.all()  # Get all teams the user is a member of
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            return redirect('comment')
+    else:
+        form = CommentForm()
+
+    # Filter comments by users who are in the same teams as the current user
+    comments = Comment.objects.filter(
+        Q(user__leading_teams__in=user_teams) |
+        Q(user__managed_teams__in=user_teams) |
+        Q(user__teams__in=user_teams)
+    ).distinct().order_by('-created_at')
+
+    return render(request, 'frontend/comment.html', {'form': form, 'comments': comments})
 
 
 
 
+from django.http import JsonResponse
 
 
+def save_user_action(request):
+    if request.method == "POST":
+        action = request.POST.get("action")
+        user_action = UserAction(user=request.user, action=action)
+        user_action.save()
+        return JsonResponse({"status": "success"})
+    return JsonResponse({"status": "error"})
 
 
-
-
+@login_required
+def get_team_user_actions(request):
+    user_teams = request.user.teams.all()  # Get all teams the user is a member of
+    user_actions = UserAction.objects.filter(
+        user__teams__in=user_teams
+    ).order_by('-timestamp').values('html', 'className')
+    return JsonResponse({"user_actions": list(user_actions)})
 
 
 

@@ -69,9 +69,11 @@
 
 
                   <div class="mt-8">
+                    <div id='update-task-button'>
                     <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
                         Save
                     </button>
+                  </div>
 
                    
                   </div>
@@ -112,4 +114,74 @@
             </div>
 
    
+
+
+ 
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include custom JavaScript code -->
+<script src="js/custom.js"></script>
+<script>
+$(document).ready(function() {
+    // Load saved actions from local storage
+    loadUserActions();
+
+    $(".action-button").click(function() {
+        const action = $(this).data("action");
+        const timestamp = new Date().toLocaleString();
+        const actionResult = $("<div></div>").addClass("bg-white shadow rounded-md p-4 mb-4").html(`
+            <h3 class="text-xl font-semibold mb-2">${action}</h3>
+            <p>Performed on: ${timestamp}</p>
+        `);
+        $("#user-actions-container").prepend(actionResult);
+        saveUserAction(actionResult); // Save the action result to local storage
+    });
+
+    // Add this click event for the "Clear All" button
+    $("#clear-all").click(function() {
+        $("#user-actions-container").empty();
+        localStorage.removeItem('userActions');
+    });
+
+    $("#update-task-button").click(function () {
+      const assigneeSelect = $("select[name='assignee']"); // Replace 'select[name="team"]' with the appropriate selector for your team field
+      if (assigneeSelect.val() !== "") {
+        const action = "Performed: Advisor Updated Task";
+        const timestamp = new Date().toLocaleString();
+        const actionResult = $("<div></div>")
+          .addClass("bg-white shadow rounded-md p-4 mb-4")
+          .html(`
+                    <h3 class="text-xl font-semibold mb-2">${action}</h3>
+                    <p>Performed on: ${timestamp}</p>
+                `);
+        $("#user-actions-container").prepend(actionResult);
+        saveUserAction(actionResult); // Save the action result to local storage
+  }
+});
+
+
+});
+
+// Save user action to local storage
+function saveUserAction(actionBlock) {
+    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
+    actions.push({
+        html: actionBlock.html(),
+        className: actionBlock.attr('class')
+    });
+    localStorage.setItem('userActions', JSON.stringify(actions));
+}
+
+// Load user actions from local storage
+function loadUserActions() {
+    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
+    actions.forEach((actionData) => {
+        const actionBlock = $('<div>').html(actionData.html).attr('class', actionData.className);
+        $('#user-actions-container').prepend(actionBlock);
+    });
+}
+
+
+</script>              
 {% endblock %}

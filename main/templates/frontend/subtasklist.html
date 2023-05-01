@@ -8,8 +8,29 @@
 <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 pr-10 lg:px-8">
     <div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white px-12">
        
-        <h1 class="font-medium text-2xl text-gray-500 pb-10">Task: {{ task.title }}</h1>
-		
+
+        <section class="text-gray-600 body-font mb-10 ">
+            <div class="container pl-10">
+              <div class="flex mx-auto flex-wrap mb5">
+                <a href="{% url 'project_list' %}" class="hover:bg-gray-100 hover:text-indigo-500 hover:border-indigo-500 sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none border-gray-200 hover:text-gray-900 tracking-wider">
+                  <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>-->Project: {{ project.name }}
+                </a>
+                <a  href="{% url 'task_list' project_id=project_id %}" class="hover:bg-gray-100 hover:text-indigo-500 hover:border-indigo-500 sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none border-gray-200 hover:text-gray-900 tracking-wider">
+                  <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                  </svg>-->Task: {{ task.title }}
+                </a>
+                <a  class="sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-medium bg-gray-100 inline-flex items-center leading-none border-indigo-500 text-indigo-500 tracking-wider rounded-t">
+                    <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>-->Sub Task List
+                  </a>
+               
+              </div>
+            </div>
+        </section>
         
 			
             {% if is_team_member %}
@@ -18,7 +39,7 @@
         </div>
     </div>
 	{% if sub_tasks %}
-	<h1 class="font-medium text-2xl text-gray-500 pb-10 ml-14">Sub Task List</h1>
+	<h1 class="font-medium text-2xl text-gray-500 pb-10 ml-14 mt-10 ">Sub Task List</h1>
     <div class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
 	
 		<table class="min-w-full">

@@ -33,4 +33,7 @@ urlpatterns = [
     path('project/<int:project_id>/tasks/<int:task_id>/sub_task_list/', views.sub_task_list, name='sub_task_list'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/update/', views.update_sub_task, name='update_sub_task'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/delete/', views.delete_sub_task, name='delete_sub_task'),
+    path('comment', views.comment, name='comment'),
+    path('save_user_action/', views.save_user_action, name='save_user_action'),
+    path('get_team_user_actions/', views.get_team_user_actions, name='get_team_user_actions'),
 ]
