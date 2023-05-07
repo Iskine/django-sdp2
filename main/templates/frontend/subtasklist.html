@@ -37,6 +37,8 @@
                       <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                     </svg>-->Sub Task List
                   </a>
+
+                    
                
               </div>
             </div>
@@ -55,9 +57,126 @@
 	{% if sub_tasks %}
 
 
-
+    <div class="data-container overflow-y-auto">
+        <div class="font-medium text-xl ml-6 mt-10 text-gray-600">Milestone</div>
+        <div class="overflow-y-auto">
+        <div id="see_chart" data-project-id="{{project_id}}" data-task-id="{{task_id}}"></div>
+        <br>
+        </div>
+        <div class="h-72">
+          <span class="flex inline-flex"><h1 class="text-gray-400 ">Today date: &nbsp; </h1><h2 id="current_date" class="font-medium text-gray-500"></h2></span>
+            <div id="chart_div"></div>
+        </div>
+        
+        </div>
+        
     
 	<h1 class="font-medium text-2xl text-gray-500 pb-10 ml-14 mt-10 ">Sub Task List</h1>
+
+
+    <!-- Start Gantt Chart -->
+
+
+    {% block javascript %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    
+    
+    <script>
+        $(document).ready(function() {
+          var currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+          $('#current_date').text(currentDate);
+      
+          const projectid = $('#see_chart').attr('data-project-id');
+          const taskid = $('#see_chart').attr('data-task-id');
+         
+              google.charts.load('current', {'packages':['gantt']});
+              google.charts.setOnLoadCallback(drawChart);
+      
+              function drawChart() {
+         
+                console.log('Drawing chart for project', projectid, 'and task', taskid);
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'SubTask ID');
+                data.addColumn('string', 'SubTask Name');
+                data.addColumn('date', 'Start Date');
+                data.addColumn('date', 'End Date');
+                data.addColumn('number', 'Duration');
+                data.addColumn('number', 'Percent Complete');
+                data.addColumn('string', 'Dependencies');
+      
+                // get data from server
+                $.ajax({
+                    url: `/get-sub-tasks/${projectid}/${taskid}`,
+                    dataType: 'json',
+                    success: function(jsonData) {
+                      console.log('Received data', jsonData);
+                        // format data for chart
+                        var rows = [];
+                        $.each(jsonData, function(i, subtask) {
+                            rows.push([
+                            subtask.SubTask_ID,
+                            subtask.SubTask_Name,
+                            new Date(subtask.Start_Date),
+                            new Date(subtask.End_Date),
+                            subtask.Duration,
+                            subtask.Percent_Complete,
+                            null,
+                            ]);
+                        });
+                        data.addRows(rows);
+                        console.log('Formatted data', rows);
+      
+                        var trackHeight = 50;
+                        // set chart options
+                        var options = {
+                            height: data.getNumberOfRows() * trackHeight,
+                            width: '100%',
+                            gantt: {
+                              barStyle: {
+                                stroke: 'black',
+                                strokeWidth: 1,
+                                fill: '#f9c4d7',
+                            },
+                          },
+                        };
+      
+                        // create and draw chart
+                        console.log('Creating chart');
+                        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+                        chart.draw(data, options);
+                   
+
+                        // draw current date line
+                        var now = google.visualization.Gantt.now();
+                        var xCoord = chart.getChartLayoutInterface().getXLocation(now);
+                        chart.drawLine(xCoord, 0, xCoord, chart.getChartHeight(), { style: 'stroke-dasharray: 4,4;', color: '#333', width: 1.5 });
+                      },
+                    
+
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+              }
+          });
+      
+      </script>
+{% endblock %}
+
+<!-- End Gantt Chart -->
+
+
+
+
+
+
+
+    <div class="text-indigo-500 font-bold bg-gray-200 rounded w-fit px-3 py-1 mb-2">
+       Sub Task Completed:  {{ num_completed_tasks }} / {{ sub_tasks|length }}
+        </div>
     <div class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
 	
 		<table class="min-w-full">

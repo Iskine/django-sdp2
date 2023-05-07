@@ -184,7 +184,7 @@
       </div>
         {% endif %}
 
-        {% if is_team_leader or is_team_member %}
+        {% if is_team_leader %}
       <div class="mt-12 justify-center ml-8">
           <a href="{% url 'delete_project' project_id=project.pk %}"  class="bg-red-500 py-2 px-10 rounded-md font-medium hover:bg-red-400 hover:text-gray-700 ">Delete</a>
       </div>

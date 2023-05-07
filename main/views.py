@@ -1182,29 +1182,6 @@ def get_tasks(request, project_id):
 
 
 
-from django.http import JsonResponse
-from django.db.models import Count
-
-@login_required(login_url="/login")
-@user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
-def get_sub_tasks(request, project_id, task_id):
-    task = get_object_or_404(Task, pk=task_id, project__id=project_id)
-    subtasks = SubTask.objects.filter(task=task).values('id','title', 'start_date', 'end_date', 'completed')
-    data = []
-    for subtask in subtasks:
-        data.append({
-            'SubTask_ID': subtask['id'],
-            'SubTask_Name': subtask['title'],
-            'Start_Date': subtask['start_date'].strftime('%Y-%m-%d'),
-            'End_Date': subtask['end_date'].strftime('%Y-%m-%d'),
-            'Percent_Complete': 100 if subtask['completed'] else 0,
-            'Dependencies': None
-        })
-
-    return JsonResponse(data, safe=False)
-
-
-
 
 
 
@@ -1274,13 +1251,13 @@ def create_sub_task(request, task_id):
 def sub_task_list(request, project_id, task_id):
     user = request.user
     if user.groups.filter(name='team_member').exists():
-            user_group_name = 'Student'
+        user_group_name = 'Student'
     elif user.groups.filter(name='team_leader').exists():
-            user_group_name = 'Advisor'
+        user_group_name = 'Advisor'
     elif user.groups.filter(name='team_manager').exists():
-            user_group_name = 'Dean'
+        user_group_name = 'Dean'
     else:
-            user_group_name = 'Admin'
+        user_group_name = 'Admin'
 
     project = get_object_or_404(Project, pk=project_id)
     task = get_object_or_404(Task, pk=task_id, project=project)
@@ -1288,13 +1265,14 @@ def sub_task_list(request, project_id, task_id):
     if not (request.user.groups.filter(name='team_member').exists() or request.user.groups.filter(name='team_leader').exists() or request.user.groups.filter(name='team_manager').exists()):
         raise PermissionDenied
 
-    
-    sub_tasks = SubTask.objects.filter(task=task)
+    sub_tasks = SubTask.objects.filter(task=task).order_by('completed', 'start_date')
+    num_completed_tasks = SubTask.objects.filter(task=task, completed=True).count()
 
     is_team_member = request.user.groups.filter(name='team_member').exists()
     is_team_leader = request.user.groups.filter(name='team_leader').exists()
 
-    return render(request, 'frontend/subtasklist.html', {'sub_tasks': sub_tasks, 'project_id': project_id, 'task_id': task_id, 'project': project, 'task': task, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader, 'user_group_name': user_group_name})
+    return render(request, 'frontend/subtasklist.html', {'sub_tasks': sub_tasks, 'num_completed_tasks': num_completed_tasks, 'project_id': project_id, 'task_id': task_id, 'project': project, 'task': task, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader, 'user_group_name': user_group_name})
+
 
 
 
@@ -1396,6 +1374,42 @@ def delete_sub_task(request, sub_task_id, project_id, task_id):
     }
 
     return render(request, 'frontend/deletesubtask.html', context)
+
+
+
+
+
+
+
+
+from django.http import JsonResponse
+from django.db.models import Count
+
+@login_required(login_url="/login")
+@user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
+def get_sub_tasks(request, project_id, task_id):
+    project = get_object_or_404(Project, pk=project_id)
+    task = get_object_or_404(Task, pk=task_id, project=project)
+    subtasks = SubTask.objects.filter(task=task).values('id','title', 'start_date', 'end_date', 'completed')
+    data = []
+    for subtask in subtasks:
+        start_date = subtask['start_date']
+        end_date = subtask['end_date']
+        duration = (end_date - start_date).days + 1
+
+        data.append({
+            'SubTask_ID': subtask['title'],
+            'SubTask_Name': subtask['title'],
+            'Start_Date': start_date.strftime('%Y-%m-%d'),
+            'End_Date': end_date.strftime('%Y-%m-%d'),
+            'Duration': duration,
+            'Percent_Complete': 100 if subtask['completed'] else 0,
+            'Dependencies': None
+        })
+
+    return JsonResponse(data, safe=False)
+
+
 
 
 

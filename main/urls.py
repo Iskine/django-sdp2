@@ -37,6 +37,6 @@ urlpatterns = [
     path('comment/', views.comments_and_logs, name='comment'),
     path('comment/<int:log_id>/delete/', views.delete_log, name='delete_log'),
     path('delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
-
+    path('get-sub-tasks/<int:project_id>/<int:task_id>/', views.get_sub_tasks, name='get_sub_tasks'),
 
 ]

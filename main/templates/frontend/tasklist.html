@@ -67,6 +67,7 @@
 <br>
 </div>
 <div class="h-72">
+  <span class="flex inline-flex"><h1 class="text-gray-400 ">Today date: &nbsp; </h1><h2 id="current_date" class="font-medium text-gray-500"></h2></span>
     <div id="chart_div"></div>
 </div>
 
@@ -77,10 +78,14 @@
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
             
+            
             <script>
                 $(document).ready(function() {
-                  const id = $('#see_chart').attr('data-project-id');
+                  var currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                  $('#current_date').text(currentDate);
               
+                  const id = $('#see_chart').attr('data-project-id');
+                 
                       google.charts.load('current', {'packages':['gantt']});
                       google.charts.setOnLoadCallback(drawChart);
               
@@ -118,12 +123,27 @@
                                 // set chart options
                                 var options = {
                                     height: 500,
+                                    gantt: {
+                                      barStyle: {
+                                        stroke: 'black',
+                                        strokeWidth: 1,
+                                        fill: '#f9c4d7',
+                                    },
+                                  },
                                 };
               
                                 // create and draw chart
                                 var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
                                 chart.draw(data, options);
-                            },
+                           
+
+                                // draw current date line
+                                var now = google.visualization.Gantt.now();
+                                var xCoord = chart.getChartLayoutInterface().getXLocation(now);
+                                chart.drawLine(xCoord, 0, xCoord, chart.getChartHeight(), { style: 'stroke-dasharray: 4,4;', color: '#333', width: 1.5 });
+                              },
+                            
+
                             error: function(jqXHR, textStatus, errorThrown) {
                                 console.log(textStatus, errorThrown);
                             }
