@@ -16,7 +16,7 @@ urlpatterns = [
     path('change_user_password/<int:id>', views.change_user_password, name='change_user_password'), #for the admin to change the user password
     path('project_list/', views.project_list, name='project_list'),#list all of the project 
     path('project_details/<int:project_id>', views.project_details, name='project_details'),#Detail of the project 
-    path('create_project', views.create_project, name='create_project'),# create new project form
+    path('create_project/', views.create_project, name='create_project'),# create new project form
     path('project/<int:project_id>/update_project/', views.update_project, name='update_project'),# update a project 
     path('delete_project/<int:project_id>', views.delete_project, name='delete_project'),#delete a project 
     path('project/<int:project_id>/tasks', views.task_list, name='task_list'),#list of task
@@ -33,7 +33,10 @@ urlpatterns = [
     path('project/<int:project_id>/tasks/<int:task_id>/sub_task_list/', views.sub_task_list, name='sub_task_list'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/update/', views.update_sub_task, name='update_sub_task'),
     path('project/<int:project_id>/tasks/<int:task_id>/subtasks/<int:sub_task_id>/delete/', views.delete_sub_task, name='delete_sub_task'),
-    path('comment', views.comment, name='comment'),
-    path('save_user_action/', views.save_user_action, name='save_user_action'),
-    path('get_team_user_actions/', views.get_team_user_actions, name='get_team_user_actions'),
+    path('project_list_all/', views.project_list_all, name='project_list_all'),
+    path('comment/', views.comments_and_logs, name='comment'),
+    path('comment/<int:log_id>/delete/', views.delete_log, name='delete_log'),
+    path('delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
+
+
 ]

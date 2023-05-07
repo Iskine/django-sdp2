@@ -6,15 +6,18 @@
 
    
 <form class="text-gray-900 body-font w-full">
+  <div class="flex flex-row-reverse">
+    <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{  user_group_name }}</div>
+  </div>
   <a href="/project_list"><div class="px-3 bg-indigo-300 w-fit rounded-lg py-1 hover:bg-indigo-400">< back</div></a>
   <div class="container px-5 mx-auto flex flex-wrap items-center justify-center">
 
-    <div class="w-screen px-10 py-10 mt-10 mt-0">
+    <div class="w-screen px-10 mt-10 mt-0">
   <h1 class="font-medium text-2xl text-gray-">Project Details</h1>
  
-    <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
+    <div class="container px-5 mx-auto flex flex-wrap items-center justify-center">
    
-    <div class="w-full px-10 py-10 rounded-2xl shadow mt-10 mt-0 bg-gray-100 flex-grow ">
+    <div class="w-full px-10 rounded-2xl shadow mt-10 mt-0 bg-gray-100 flex-grow ">
     <div class="flex flex-row justify-center ">
         <h1 class="text-3xl font-medium title-font mb-8">{{ project.name}}</h1>
         </div>
@@ -42,7 +45,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -62,7 +65,7 @@
           </section>
          
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -86,7 +89,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -108,7 +111,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -128,7 +131,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -148,7 +151,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -169,18 +172,32 @@
         </label> 
       </form>
           
-        {% if is_team_leader or is_team_member %}
+       
  <div class="flex justify-center">
+
+  
+
+  {% if is_team_leader or is_team_member %}
         <div class="flex justify-center pt-10">
         <a href="{% url 'update_project' project_id=project.pk %}"  class="bg-indigo-400 py-2 px-10 rounded-md font-medium hover:bg-indigo-300 hover:text-indigo-700">Edit</a>
+       
       </div>
         {% endif %}
 
-        {% if is_team_leader %}
+        {% if is_team_leader or is_team_member %}
       <div class="mt-12 justify-center ml-8">
           <a href="{% url 'delete_project' project_id=project.pk %}"  class="bg-red-500 py-2 px-10 rounded-md font-medium hover:bg-red-400 hover:text-gray-700 ">Delete</a>
       </div>
       {% endif %}
+      <div class="mt-12 ml-7">
+        <a href="{% url 'comment'  %}" class="bg-yellow-400 p-2 rounded-md font-medium hover:bg-yellow-300 hover:text-black-700">View Comments and Logs</a>
+      </div>
+      
+      <div class="mt-12 ml-7">
+        <a href="{% url 'project_list' %}" class="bg-blue-500 hover:bg-blue-700 text-black py-2 px-4 rounded">Cancel</a>
+       </div> 
+
+  
    
 </div>
         

@@ -5,6 +5,10 @@
 {% block content %}
 
         <section class="text-gray-600 body-font">
+          <div class="flex flex-row-reverse">
+            <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+            </div>
+          
             <div class="container px-5 py-1 mx-auto">
               <div class="flex flex-wrap -m-29">
 
@@ -30,23 +34,17 @@
 
                   <div class="pt-6">
                     <label for="{{ form.start_date.auto_id }}" class="leading-7 text-sm text-gray-600">Start Date</label>
-                    <input type="date" id="{{ form.start_date.auto_id }}" 
-                    name="{{ form.start_date.html_name }}" 
-                    value="{{ form.start_date.value|default:''}}"
+                    {{ form.start_date }} 
                     {% if task_form.start_date.field.required %}required{% endif %}
-                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  </div>
+                 </div>
                   {% if form.start_date.errors %}
                     <p class="text-red-500 text-sm mt-1">{{ form.start_date.errors.as_text }}</p>
                     {% endif %}
 
                     <div class="pt-6">
                         <label for="{{ form.end_date.auto_id }}" class="leading-7 text-sm text-gray-600">End Date</label>
-                        <input type="date" id="{{ form.end_date.auto_id }}" 
-                        name="{{ form.end_date.html_name }}" 
-                        value="{{ form.end_date.value|default:''}}"
+                        {{ form.end_date }} 
                         {% if task_form.end_date.field.required %}required{% endif %}
-                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                       </div>
                       {% if form.end_date.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ form.end_date.errors.as_text }}</p>
@@ -87,7 +85,7 @@
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
                     
                   <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Status</h2>
-                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+                  <p class="leading-relaxed mb-8"></p>
                
                     <div class="pt-4">
                     <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Status</div>

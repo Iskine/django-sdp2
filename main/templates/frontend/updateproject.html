@@ -6,8 +6,15 @@
 
 
         <section class="text-gray-600 body-font">
+          
             <div class="container px-5 py-1 mx-auto">
+              <div class="flex flex-row-reverse">
+                <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+                </div>
+              
+              
               <div class="flex flex-wrap -m-29">
+               
 
                 <div class="p-10 md:w-1/2 flex flex-col items-start">
 
@@ -19,7 +26,7 @@
                     <input type="text" id="{{ form.name.auto_id }}" 
                     name="{{ form.name.html_name }}" 
                     value="{{ form.name.value|default:'' }}" 
-                    {% if team_form.name.field.required %}required{% endif %} 
+                    {% if project_form.name.field.required %}required{% endif %} 
                     placeholder="Django Project" 
                     class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
                     </input>
@@ -42,13 +49,9 @@
 
                   <div class="pt-6">
                     <label for="{{ form.start_date.auto_id }}" class="leading-7 text-sm text-gray-600">Start Date</label>
-                    <input type="date" id="{{ form.start_date.auto_id }}" 
-                    name="{{ form.start_date.html_name }}" 
-                    value="{{ form.start_date.value|default:'' }}" 
-                   
-                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                    {% if team_form.start_date.field.required %}required{% endif %} 
-                </input>
+                  {{ form.start_date }} 
+                    {% if project_form.start_date.field.required %}required{% endif %} 
+               
                         {% if form.start_date.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ form.start_date.errors.as_text }}</p>
                         {% endif %} 
@@ -56,13 +59,9 @@
 
                   <div class="pt-6">
                     <label for="{{ form.end_date.auto_id }}" class="leading-7 text-sm text-gray-600">Due Date</label>
-                    <input type="date" id="{{ form.end_date.auto_id }}" 
-                    name="{{ form.end_date.html_name }}" 
-                    value="{{ form.end_date.value|default:'' }}" 
+                    {{ form.end_date }}  
+                    {% if project_form.end_date.field.required %}required{% endif %}    
                     
-                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                    {% if team_form.end_date.field.required %}required{% endif %}     
-                </input>
                         {% if form.end_date.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ form.end_date.errors.as_text }}</p>
                         {% endif %} 
@@ -70,12 +69,12 @@
 
                   <div class="pt-6">
                     <label for="{{ form.description.auto_id }}" class="leading-7 text-sm text-gray-600">Description</label>
-                    <textarea type="message" id="{{ form.description.auto_id }}"  
+                    <input type="message" id="{{ form.description.auto_id }}"  
                     name="{{ form.description.html_name }}"  
                     value="{{ form.description.value|default:'' }}" 
-                 
-                    class="w-full h-20 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> </textarea>
-                    {% if team_form.description.field.required %}required{% endif %}   
+                    {% if project_form.description.field.required %}required{% endif %}   
+                    class="w-full h-20 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> </input>
+                  <input value="{{ form.id }}" />
                 </div>
                     {% if form.description.errors %}
                     <p class="text-red-500 text-sm mt-1">{{ form.description.errors.as_text }}</p>
@@ -83,20 +82,22 @@
 
 
                   <div class="mt-8">
-                    <div id="update-project-button">
+                    <!-- <div id="update-project-button"> -->
                     <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
                         Update Project
                     </button>
+
+                    <a href="{% url 'project_details' project_id=project.id %}"><div class="mt-10 bg-blue-500 w-16 py-1 flex justify-center rounded text-white">Cancel</div></a>
                   </div>
-                  </div>
+                  <!-- </div> -->
 
                 </div>
          
 
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
                     
-                  <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Task Assignees</h2>
-                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+                  <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Project Team</h2>
+                  <p class="leading-relaxed mb-8">Each team have an advisor and student(s). A project belong to each team.</p>
            
                     <div class="pt-4">
                     <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Add Team</div>
@@ -120,74 +121,5 @@
    
 
 
-
-
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Include custom JavaScript code -->
-<script src="js/custom.js"></script>
-<script>
-$(document).ready(function() {
-    // Load saved actions from local storage
-    loadUserActions();
-
-    $(".action-button").click(function() {
-        const action = $(this).data("action");
-        const timestamp = new Date().toLocaleString();
-        const actionResult = $("<div></div>").addClass("bg-white shadow rounded-md p-4 mb-4").html(`
-            <h3 class="text-xl font-semibold mb-2">${action}</h3>
-            <p>Performed on: ${timestamp}</p>
-        `);
-        $("#user-actions-container").prepend(actionResult);
-        saveUserAction(actionResult); // Save the action result to local storage
-    });
-
-    // Add this click event for the "Clear All" button
-    $("#clear-all").click(function() {
-        $("#user-actions-container").empty();
-        localStorage.removeItem('userActions');
-    });
-
-    $("#update-project-button").click(function () {
-      const teamSelect = $("select[name='team']"); // Replace 'select[name="team"]' with the appropriate selector for your team field
-      if (teamSelect.val() !== "") {
-        const action = "Performed: Advisor Updated Project";
-        const timestamp = new Date().toLocaleString();
-        const actionResult = $("<div></div>")
-          .addClass("bg-white shadow rounded-md p-4 mb-4")
-          .html(`
-                    <h3 class="text-xl font-semibold mb-2">${action}</h3>
-                    <p>Performed on: ${timestamp}</p>
-                `);
-        $("#user-actions-container").prepend(actionResult);
-        saveUserAction(actionResult); // Save the action result to local storage
-  }
-});
-
-
-});
-
-// Save user action to local storage
-function saveUserAction(actionBlock) {
-    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
-    actions.push({
-        html: actionBlock.html(),
-        className: actionBlock.attr('class')
-    });
-    localStorage.setItem('userActions', JSON.stringify(actions));
-}
-
-// Load user actions from local storage
-function loadUserActions() {
-    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
-    actions.forEach((actionData) => {
-        const actionBlock = $('<div>').html(actionData.html).attr('class', actionData.className);
-        $('#user-actions-container').prepend(actionBlock);
-    });
-}
-
-
-</script>    
 
 {% endblock %}

@@ -6,6 +6,9 @@
 
         <section class="text-gray-600 body-font">
             <div class="container px-5 py-1 mx-auto">
+              <div class="flex flex-row-reverse">
+                <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+                </div>
               <div class="flex flex-wrap -m-29">
 
                 <div class="p-10 md:w-1/2 flex flex-col items-start">
@@ -30,27 +33,23 @@
 
                   <div class="pt-6">
                     <label for="{{ form.start_date.auto_id }}" class="leading-7 text-sm text-gray-600">Start Date</label>
-                    <input type="date" id="{{ form.start_date.auto_id }}" 
-                    name="{{ form.start_date.html_name }}" 
-                    value="{{ form.start_date.value|default:''}}"
+                    {{ form.start_date }} 
                     {% if task_form.start_date.field.required %}required{% endif %}
-                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
                   {% if form.start_date.errors %}
                     <p class="text-red-500 text-sm mt-1">{{ form.start_date.errors.as_text }}</p>
                     {% endif %}
 
-                    <div class="pt-6">
-                        <label for="{{ form.end_date.auto_id }}" class="leading-7 text-sm text-gray-600">End Date</label>
-                        <input type="date" id="{{ form.end_date.auto_id }}" 
-                        name="{{ form.end_date.html_name }}" 
-                        value="{{ form.end_date.value|default:''}}"
-                        {% if task_form.end_date.field.required %}required{% endif %}
-                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                      </div>
-                      {% if form.end_date.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.end_date.errors.as_text }}</p>
-                        {% endif %}
+
+
+                  <div class="pt-6">
+                      <label for="{{ form.end_date.auto_id }}" class="leading-7 text-sm text-gray-600">End Date</label>
+                      {{ form.end_date }} 
+                      {% if task_form.end_date.field.required %}required{% endif %}
+                    </div>
+                    {% if form.end_date.errors %}
+                      <p class="text-red-500 text-sm mt-1">{{ form.end_date.errors.as_text }}</p>
+                      {% endif %}
 
         
 
@@ -69,11 +68,13 @@
 
 
                   <div class="mt-8">
-                    <div id='update-task-button'>
+                    <!-- <div id='update-task-button'> -->
                     <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200">
                         Save
                     </button>
-                  </div>
+                    <a href="{% url 'task_details' project_id=project_id task_id=task.id %}"><div class="hover:bg-blue-300 mt-10 bg-blue-500 py-1 rounded w-20 flex justify-center text-white">Cancel</div></a>
+                    <!-- </div> -->
+              
 
                    
                   </div>
@@ -92,7 +93,7 @@
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
                     
                   <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Task Assignee</h2>
-                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+                  <p class="leading-relaxed mb-8">Add assignee for the task. The assignee will receive the task assigned.</p>
                
                     <div class="pt-4">
                     <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">+ Add Assignee</div>
@@ -115,73 +116,5 @@
 
    
 
-
- 
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Include custom JavaScript code -->
-<script src="js/custom.js"></script>
-<script>
-$(document).ready(function() {
-    // Load saved actions from local storage
-    loadUserActions();
-
-    $(".action-button").click(function() {
-        const action = $(this).data("action");
-        const timestamp = new Date().toLocaleString();
-        const actionResult = $("<div></div>").addClass("bg-white shadow rounded-md p-4 mb-4").html(`
-            <h3 class="text-xl font-semibold mb-2">${action}</h3>
-            <p>Performed on: ${timestamp}</p>
-        `);
-        $("#user-actions-container").prepend(actionResult);
-        saveUserAction(actionResult); // Save the action result to local storage
-    });
-
-    // Add this click event for the "Clear All" button
-    $("#clear-all").click(function() {
-        $("#user-actions-container").empty();
-        localStorage.removeItem('userActions');
-    });
-
-    $("#update-task-button").click(function () {
-      const assigneeSelect = $("select[name='assignee']"); // Replace 'select[name="team"]' with the appropriate selector for your team field
-      if (assigneeSelect.val() !== "") {
-        const action = "Performed: Advisor Updated Task";
-        const timestamp = new Date().toLocaleString();
-        const actionResult = $("<div></div>")
-          .addClass("bg-white shadow rounded-md p-4 mb-4")
-          .html(`
-                    <h3 class="text-xl font-semibold mb-2">${action}</h3>
-                    <p>Performed on: ${timestamp}</p>
-                `);
-        $("#user-actions-container").prepend(actionResult);
-        saveUserAction(actionResult); // Save the action result to local storage
-  }
-});
-
-
-});
-
-// Save user action to local storage
-function saveUserAction(actionBlock) {
-    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
-    actions.push({
-        html: actionBlock.html(),
-        className: actionBlock.attr('class')
-    });
-    localStorage.setItem('userActions', JSON.stringify(actions));
-}
-
-// Load user actions from local storage
-function loadUserActions() {
-    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
-    actions.forEach((actionData) => {
-        const actionBlock = $('<div>').html(actionData.html).attr('class', actionData.className);
-        $('#user-actions-container').prepend(actionBlock);
-    });
-}
-
-
-</script>              
+             
 {% endblock %}

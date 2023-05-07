@@ -15,7 +15,7 @@
 
     
         <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -37,7 +37,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -58,7 +58,7 @@
 
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -69,9 +69,7 @@
 
                 <div class="p-12 md:w-1/2 flex flex-col items-end">
                   <h3 class="sm:text-xl text-xl title-font text-gray-900 mt-4 mb-4">
-                    {% for group in request.user.groups.all %}
-                    {{ group.name }}
-                    {% endfor %}</h3>
+                    {{ user_group_name }}</h3>
                     <div class=" mt-auto w-full">
                   </div>
                 </div>

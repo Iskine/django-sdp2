@@ -5,7 +5,11 @@
 
 {% block content %}
 
+<div class="flex flex-row-reverse">
+    <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+    </div>
 <form method="POST" class="text-gray-900 body-font">
+ 
     <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
 
     <div class="w-fit px-32 py-10 rounded-2xl shadow mt-10 mt-0">
@@ -18,16 +22,16 @@
        <h2 class="mb-10 ">Are you sure you want to delete {{ project.name }} project</h2>
        {% csrf_token %}
         <div class="flex justify-center ">
-            <div class="action-button" data-action="Performed: Deleted Project">
+            <!-- <div class="action-button" data-action="Performed: Deleted Project"> -->
             <button type="submit" class="bg-red-500 py-2 px-10 rounded-md font-medium hover:bg-red-700 hover:text-black">Delete Project</button>
-            </div>
         </div>
+        <!-- </div> -->
 
         <div class="flex justify-center mt-10">
             <a href="{% url 'project_list' %}" class="bg-blue-400 py-2 px-10 rounded-md font-medium hover:bg-blue-300 hover:text-blue-700">Cancel</a>
         </div>
 
-</div>
+        </div>
 </div>
 </div>
 </div>
@@ -36,58 +40,6 @@
 
 
 
-
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Include custom JavaScript code -->
-<script src="js/custom.js"></script>
-<script>
-$(document).ready(function() {
-    // Load saved actions from local storage
-    loadUserActions();
-
-    $(".action-button").click(function() {
-        const action = $(this).data("action");
-        const timestamp = new Date().toLocaleString();
-        const actionResult = $("<div></div>").addClass("bg-white shadow rounded-md p-4 mb-4").html(`
-            <h3 class="text-xl font-semibold mb-2">${action}</h3>
-            <p>Performed on: ${timestamp}</p>
-        `);
-        $("#user-actions-container").prepend(actionResult);
-        saveUserAction(actionResult); // Save the action result to local storage
-    });
-
-    // Add this click event for the "Clear All" button
-    $("#clear-all").click(function() {
-        $("#user-actions-container").empty();
-        localStorage.removeItem('userActions');
-    });
-
-
-});
-
-// Save user action to local storage
-function saveUserAction(actionBlock) {
-    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
-    actions.push({
-        html: actionBlock.html(),
-        className: actionBlock.attr('class')
-    });
-    localStorage.setItem('userActions', JSON.stringify(actions));
-}
-
-// Load user actions from local storage
-function loadUserActions() {
-    const actions = JSON.parse(localStorage.getItem('userActions')) || [];
-    actions.forEach((actionData) => {
-        const actionBlock = $('<div>').html(actionData.html).attr('class', actionData.className);
-        $('#user-actions-container').prepend(actionBlock);
-    });
-}
-
-
-</script>    
 
 
 

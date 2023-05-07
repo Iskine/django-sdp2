@@ -5,6 +5,9 @@
 {% block content %}
 
         <section class="text-gray-600 body-font">
+          <div class="flex flex-row-reverse">
+            <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+            </div>
             <div class="container px-5 py-1 mx-auto">
               <div class="flex flex-wrap -m-29">
 
@@ -80,7 +83,7 @@
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
                     
                   <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Status</h2>
-                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+                  <p class="leading-relaxed mb-8">Subtask's status will be use to calculate the "percent completed" for a task of the subtasks.</p>
                
                     <div class="pt-4">
                     <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Status</div>

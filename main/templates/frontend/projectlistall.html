@@ -1,0 +1,98 @@
+{% extends 'frontend/sidebar-h-screen.html' %}
+
+
+{% block title %} Project List All {% endblock %}
+
+{% block content %}
+
+
+<section class="text-gray-600 body-font">
+
+  <section class="text-gray-600 body-font ">
+    <div class="flex flex-row-reverse">
+      <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+      </div>
+    
+    
+    <div class="container pl-10">
+      <div class="flex mx-auto flex-wrap mb5">
+        <a href="/project_list" class="sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font text-gray-500 font-medium inline-flex items-center leading-none tracking-wider rounded-t">
+          <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>-->My Project
+        </a>
+        <a class="sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font border-indigo-500 text-indigo-500 font-medium bg-gray-100 inline-flex items-center leading-none tracking-wider rounded-t">
+          <!-- <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>-->Project All
+        </a>
+     
+      
+      </div>
+    </div>
+</section>
+
+  <div class="container px-5 py-2 mx-auto ">
+      
+    
+        <div class="flex flex-row-reverse mr-16">
+          {% if can_create_project %}
+         
+          <a href="{% url 'create_project' %}" class="bg-blue-300 p-2 rounded-md font-medium text-sm hover:bg-indigo-300">Create Project</a>
+          {% endif %}
+
+          </div>
+      </div>
+     
+  <div class="pb-20 m-auto"></div>
+
+    <div class="-my-8 divide-y-2 divide-gray-100 ">
+
+      {% for project in projects %}
+      <div class="py-8 flex flex-wrap md:flex-nowrap">
+        <div class="md:w-64 md:mb-0 mb-6 ">
+          <span class="text-gray-500 text-sm">Status</span>
+          <span class="mt-1 text-gray-600 font-semibold title-font">{{ project.status }}</span>
+          <div>
+            <span class="text-gray-500 text-sm">Team</span>
+            <span class="mt-1 text-gray-600 font-semibold title-font">
+              {% if project.team %}
+              {{ project.team.name }}
+            {% else %}
+              No team Assigned
+            {% endif %}
+            </span>
+          </div>
+        </div>
+
+
+        <div class="md:flex-grow">
+          <a class="text-2xl font-medium text-gray-900 title-font mb-2 hover:text-gray-500" href="  {% url 'project_details' project_id=project.pk %}">{{ project.name }}</a>
+        </div>
+
+
+        <a href="{% url 'task_list' project.id %}"><button class="rounded-md bg-gray-200 py-1 px-2 text-sm hover:bg-gray-300 mr-6">Project Task > </button></a>
+       
+      </div>
+     
+      {% empty %}
+      <p>No projects found.</p>
+    {% endfor %}
+      
+      <div class="py-8 flex text-white" >
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi expedita ut laboriosam natus quod facilis cum vero nostrum rem dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. </p>
+      </div>
+     
+    
+</div>
+
+</div>
+
+</section>
+   
+
+
+   
+
+
+{% endblock %}

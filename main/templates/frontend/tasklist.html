@@ -8,6 +8,10 @@
 
         <section class="text-gray-600 body-font">
             <div class="container px-5 py-2 mx-auto">
+              <div class="flex flex-row-reverse">
+                <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+                </div>
+              
 
                 <!-- <header class="text-gray-600 body-font ">
                     <div class="container mx-auto flex flex-nowrap p-5 flex-col md:flex-row md:flex-nowrap items-center ml-16">
@@ -40,25 +44,42 @@
                     </div>
                 </section>
 
+               <div class="">
+                <div class="flex flex-row-reverse">     
+                  {% if is_team_member or is_team_leader %}           
+                    <a href="{% url 'create_task' project_id=project.id %}"><button class="hover:bg-indigo-300 rounded-md bg-indigo-200 m-4 px-8 py-2 font-medium">+ Create Task</button></a>
+                  </div>
 
+
+                {% endif %}
 <!-- Start Gantt Chart -->
 <div class="font-medium text-xl ml-6 mt-10">Milestone</div>
 
-<div id="see_chart" data-project-id="{{project.id}}" class="bg-indigo-400 w-fit rounded-md py-1 px-4 ml-9 text-white hover:bg-indigo-300 shadow-lg mt-2">see chart</div><br>
-             
-<div class="data-container" style="display:none;">
-            <div id="chart_div"></div>
+
 
 </div>
+
+
+
+<div class="data-container overflow-y-auto">
+<div class="overflow-y-auto">
+<div id="see_chart" data-project-id="{{project.id}}"></div>
+<br>
+</div>
+<div class="h-72">
+    <div id="chart_div"></div>
+</div>
+
+</div>
+
+
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
             
             <script>
                 $(document).ready(function() {
-                  $('#see_chart').click((e) => {
-                    $('.data-container').toggle();
-                      const id = e.target.getAttribute('data-project-id');
+                  const id = $('#see_chart').attr('data-project-id');
               
                       google.charts.load('current', {'packages':['gantt']});
                       google.charts.setOnLoadCallback(drawChart);
@@ -96,8 +117,7 @@
               
                                 // set chart options
                                 var options = {
-                                    height: 275,
-          
+                                    height: 500,
                                 };
               
                                 // create and draw chart
@@ -110,13 +130,13 @@
                         });
                       }
                   });
-                });
+              
               </script>
 
 
 <!-- End Gantt Chart -->
              
-        <section class="text-gray-600 body-font overflow-hidden">
+        <section class="text-gray-600 body-font ">
           <p class="mt-10 text-3xl text-gray-600 ml-6">Task</p>
             <div class="container px-5 py-24 mx-auto w-screen">
          
@@ -170,12 +190,7 @@
                 <p>No Tasks found.</p>
                 {% endif %}
 
-                {% if is_team_member or is_team_leader %}
-                <div>                
-                    <a href="{% url 'create_task' project_id=project.id %}"><button class="hover:bg-indigo-300 rounded-md bg-indigo-200 m-4 px-8 py-2 font-medium">+ Create Task</button></a>
-            
-                </div>
-                {% endif %}
+                
 
 
               </div>

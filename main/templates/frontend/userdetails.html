@@ -5,8 +5,11 @@
 {% block content %}
 
 <form class="text-gray-900 body-font">
+  <div class="flex flex-row-reverse">
+    <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+    </div>
     <div class="container px-5 mx-auto flex flex-wrap items-center justify-center">
-
+    
     <div class="w-screen px-10 py-10 rounded-2xl shadow mt-10 mt-0 bg-gray-100">
     <div class="flex flex-row justify-center ">
         <h1 class="text-3xl font-medium title-font mb-8">User Details</h1>
@@ -15,7 +18,7 @@
 
     
         <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -37,7 +40,7 @@
           </section>
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
@@ -58,7 +61,7 @@
 
 
           <section class="text-gray-600 body-font overflow-hidden shadow-lg rounded-lg bg-white  mb-2">
-            <div class="container px-5 py-10 mx-auto">
+            <div class="container px-5 mx-auto">
               <div class="flex flex-wrap -m-12">
                
                 <div class="p-12 md:w-1/2 flex flex-col items-start">

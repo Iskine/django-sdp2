@@ -23,6 +23,8 @@ class Membership(models.Model):
         return f'{self.team.name} | {self.user.username}'
 
 
+
+
 class Project(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -30,12 +32,15 @@ class Project(models.Model):
     end_date = models.DateField()
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=50, default='pending')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_projects')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_projects', null=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
    
     def __str__(self):
         return self.name
     
+
+
+
 
 class Task(models.Model):
     title = models.CharField(max_length=255)
@@ -63,6 +68,8 @@ class Task(models.Model):
         self.save()
 
 
+
+
 class SubTask(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
@@ -83,6 +90,7 @@ class SubTask(models.Model):
 
 
 
+
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
@@ -90,13 +98,39 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user}: {self.content}"
-    
 
 
-class UserAction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    action = models.CharField(max_length=255)
-    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class Log(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='logs', blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL , related_name='logs', blank=True, null=True)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, related_name='logs', null=True, blank=True)
+    log_action = models.CharField(max_length=255)
+    created_date = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField()
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+    subtask = models.ForeignKey(SubTask, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user}: {self.action}"
+        if self.project:
+            project_name = self.project.name
+        else:
+            project_name = 'Unknown Project'
+        return f"{self.log_action} ({project_name})"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

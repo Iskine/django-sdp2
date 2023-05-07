@@ -5,6 +5,10 @@
 {% block content %}
 
 <div class="text-gray-900 body-font">
+  <div class="flex flex-row-reverse">
+    <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+    </div>
+  
     <div class="container px-5 py-5 mx-auto flex flex-wrap items-center justify-center">
 
     <div class="w-fit px-32 py-10 rounded-2xl shadow mt-10 mt-0">

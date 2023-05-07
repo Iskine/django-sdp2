@@ -13,6 +13,9 @@
 
 {% csrf_token %}
         <section class="text-gray-600 body-font">
+          <div class="flex flex-row-reverse">
+            <div>Logged in as {{ user.first_name }} {{ user.last_name }} | {{ user_group_name }}</div>
+            </div>
             <div class="container px-5 py-1 mx-auto">
               <div class="flex flex-wrap -m-29">
 
@@ -31,6 +34,9 @@
                     <button type="submit" class="bg-gray-900 rounded px-4 py-1 text-gray-200 hover:bg-gray-600">
                         Create Team
                     </button>
+                    <div class="flex mt-80">
+                      <a href="{% url 'team_list' %}" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Cancel</a>
+                     </div> 
                   </div>
 
                 </div>
@@ -39,14 +45,14 @@
                 <div class="p-12 md:w-1/2 flex flex-col items-start">
 
                   <h2 class="sm:text-2xl text-xl title-font font-medium text-gray-900 mb-4">Team Assignee</h2>
-                  <p class="leading-relaxed mb-8">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum</p>
+                  <p class="leading-relaxed mb-8">Only a dean will belong to a team. There will be one advisor but you can choose one or more student for each team.</p>
                 
                   <div class="">
                     <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Team Manager</div>
                   </div>
 
                   <div class="mt-2">
-                    <label for="{{ team_form.team_manager.auto_id }}" class="leading-7 text-sm text-gray-600">Team Manager</label>
+                    <label for="{{ team_form.team_manager.auto_id }}" class="leading-7 text-sm text-gray-600">Dean</label>
                     <select name="{{ team_form.team_manager.html_name }}" id="{{ team_form.team_manager.auto_id }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
                       {% for choice in team_form.team_manager.field.choices %}
                       <option value="{{ choice.0 }}" {% if team_form.team_manager.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
@@ -55,11 +61,11 @@
                   </div>
 
                     <div class="pt-10">
-                      <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Team Leader</div>
+                      <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Advisor</div>
                     </div>
 
                     <div class="pt-2">
-                      <label for="{{ team_form.team_leader.auto_id }}" class="leading-7 text-sm text-gray-600">Team Leader</label>
+                      <label for="{{ team_form.team_leader.auto_id }}" class="leading-7 text-sm text-gray-600">Advisor</label>
                       <select name="{{ team_form.team_leader.html_name }}" id="{{ team_form.team_leader.auto_id }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-10 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
                           {% for choice in team_form.team_leader.field.choices %}
                               <option value="{{ choice.0 }}" {% if team_form.team_leader.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
@@ -68,7 +74,7 @@
                   </div>
 
                   <div class="pt-10">
-                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Team Member</div>
+                    <div class="inline-block py-1 px-2 rounded bg-gray-100 text-gray-500 text-xs font-medium tracking-widest">Choose Student(s)</div>
                 </div>
 
                   <div class="pt-2">

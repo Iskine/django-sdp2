@@ -5,8 +5,10 @@ from .models import Project, Task, Team, Membership, SubTask, Comment
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 import re
-from django.forms.widgets import HiddenInput
+from django.forms.widgets import HiddenInput, TextInput
 from django.contrib.auth import password_validation
+from django.db.models import Q
+
 
 
 
@@ -180,12 +182,28 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         if user is not None:
-            self.fields['team'].queryset = Team.objects.filter(team_leader=user)
-            print(f"User: {user}")
-            print(f"Team Queryset: {self.fields['team'].queryset}")
-            if user.groups.filter(name='team_member').exists():
+            if user.groups.filter(name='team_member').exists() or user.groups.filter(name='team_leader').exists():
+                self.fields['team'].queryset = Team.objects.filter(team_leader=user)
+            else:
                 self.fields['team'].widget.attrs['disabled'] = True
 
+        if self.instance:
+            self.initial['description'] = self.instance.description
+            self.initial['start_date'] = self.instance.start_date
+            self.initial['end_date'] = self.instance.end_date
+
+
+ # add date picker to start_date and end_date fields
+        self.fields['start_date'].widget = TextInput(attrs={
+            'class': 'form-control',
+            'type': 'date',
+            'autocomplete': 'off',
+        })
+        self.fields['end_date'].widget = TextInput(attrs={
+            'class': 'form-control',
+            'type': 'date',
+            'autocomplete': 'off',
+        })
 
 
 
@@ -193,7 +211,7 @@ class ProjectForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
         start_date = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
         end_date = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    
+
         class Meta:
             model = Task
             fields = ['title', 'description', 'assignee','start_date', 'end_date']
@@ -203,10 +221,15 @@ class TaskForm(forms.ModelForm):
         }
              
         def __init__(self, *args, **kwargs):
+            project = kwargs.pop('project', None)
+            task = kwargs.pop('task', None)
             super().__init__(*args, **kwargs)
             self.fields['assignee'].required = False
-
-
+            if project:
+                team = project.team
+                team_member_ids = Membership.objects.filter(team=team).values_list('user_id', flat=True)
+                self.fields['assignee'].queryset = User.objects.all()
+    
 
 
 
@@ -284,3 +307,4 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control'}),
         }
+    
