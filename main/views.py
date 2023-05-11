@@ -986,6 +986,8 @@ def task_list(request, project_id):
 
     project = get_object_or_404(Project, pk=project_id)
     tasks = project.tasks.all()
+    
+
     is_team_member = request.user.groups.filter(name='team_member').exists()
     is_team_leader = request.user.groups.filter(name='team_leader').exists()
     return render(request, 'frontend/tasklist.html', {'project': project, 'tasks': tasks, 'is_team_member': is_team_member, 'is_team_leader': is_team_leader, 
