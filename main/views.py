@@ -759,27 +759,28 @@ def project_list(request):
   if user.groups.filter(name='team_member').exists():
         memberships = Membership.objects.filter(user=user)
         teams = [membership.team for membership in memberships]
-        projects = Project.objects.filter(Q(team__in=teams) | Q(created_by=user))
+        projects = Project.objects.filter(Q(team__in=teams) | Q(created_by=user)).order_by('start_date')
         can_create_project = True
         can_see_all_project = False
         user_group_name = 'Student'
   elif user.groups.filter(name='team_leader').exists():
         teams = Team.objects.filter(team_leader=user)
-        projects = Project.objects.filter(Q(team__in=teams) | Q(created_by=user))
+        projects = Project.objects.filter(Q(team__in=teams) | Q(created_by=user)).order_by('start_date')
         can_create_project = True
         can_see_all_project = True
         user_group_name = 'Advisor'
   elif user.groups.filter(name='team_manager').exists():
         teams = Team.objects.all()
-        projects = Project.objects.filter(team__in=teams)
+        projects = Project.objects.filter(team__in=teams).order_by('start_date')
         can_create_project = False
         can_see_all_project = True
         user_group_name = 'Dean'
   else:
-        projects = Project.objects.filter(created_by=user)
+        projects = Project.objects.filter(created_by=user).order_by('start_date')
         can_create_project = False
         can_see_all_project = False
         user_group_name = 'Admin'
+
   return render(request, 'frontend/projectlist.html', {'user_group_name': user_group_name, 'projects':projects, 'can_create_project': can_create_project, 'can_see_all_project': can_see_all_project}) 
 
 
@@ -985,8 +986,8 @@ def task_list(request, project_id):
             user_group_name = 'Admin'
 
     project = get_object_or_404(Project, pk=project_id)
-    tasks = project.tasks.all()
-    
+    tasks = project.tasks.all().order_by('start_date')
+
 
     is_team_member = request.user.groups.filter(name='team_member').exists()
     is_team_leader = request.user.groups.filter(name='team_leader').exists()
@@ -1018,8 +1019,6 @@ def task_details(request, project_id, task_id):
     is_team_member = request.user.groups.filter(name='team_member').exists()
     return render(request, 'frontend/taskdetails.html', {'project': project, 'task': task, 'members': members, 'is_team_leader': is_team_leader, 'is_team_member':is_team_member, 
 		  'user_group_name': user_group_name})
-
-
 
 
 
@@ -1142,6 +1141,7 @@ def delete_task(request, project_id, task_id):
 #     return JsonResponse(data, safe=False)
 
 
+# get the data from task to show in the milestone
 from django.http import JsonResponse
 from django.db.models import Count
 
@@ -1184,21 +1184,11 @@ def get_tasks(request, project_id):
 
 
 
-
-
-
-
-
-
-
-
-
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from .models import SubTask, Task
 from .forms import SubTaskForm
-
+# to create sub task of the task
 @login_required(login_url="/login")
 @user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
 def create_sub_task(request, task_id):
@@ -1247,7 +1237,7 @@ def create_sub_task(request, task_id):
     return render(request, 'frontend/createsubtask.html', context)
 
 
-
+# to list all the subtask
 @login_required(login_url="/login")
 @user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
 def sub_task_list(request, project_id, task_id):
@@ -1281,7 +1271,7 @@ def sub_task_list(request, project_id, task_id):
 
 
 
-
+# to edit the subtask
 @login_required(login_url="/login")
 @user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
 def update_sub_task(request, project_id, task_id, sub_task_id):
@@ -1342,7 +1332,7 @@ def update_sub_task(request, project_id, task_id, sub_task_id):
 
 
 
-
+# to delete a sub task
 @login_required(login_url="/login")
 @user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
 def delete_sub_task(request, sub_task_id, project_id, task_id):
@@ -1383,10 +1373,9 @@ def delete_sub_task(request, sub_task_id, project_id, task_id):
 
 
 
-
 from django.http import JsonResponse
 from django.db.models import Count
-
+# to get the data from subtask to show in the milestone of subtask's milestone
 @login_required(login_url="/login")
 @user_passes_test(lambda u: not u.is_superuser and not u.is_staff, login_url='/')
 def get_sub_tasks(request, project_id, task_id):
@@ -1415,20 +1404,20 @@ def get_sub_tasks(request, project_id, task_id):
 
 
 
-
-
+# to create log of the changes
 def create_log(user, task, project_id, subtask, log_action, comment='', team=None):
     project = Project.objects.get(pk=project_id)
     log = Log(user=user, project=project, task=task, subtask=subtask, log_action=log_action, comment=comment, team=team)
     log.save()
 
 
+# to display all the log
 def display_log(request):
     logs = Log.objects.all()
     return render(request, 'frontend/comment.html', {'logs': logs})
 
 
-
+# to comment
 @login_required(login_url="/login")
 def comment(request):
     user = request.user
@@ -1459,7 +1448,7 @@ def comment(request):
 
 
 
-
+# to delete commnet
 @login_required(login_url="/login")
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
@@ -1474,7 +1463,7 @@ def delete_comment(request, comment_id):
 
 
 
-
+# to delete the log
 def delete_log(request, log_id):
     log = get_object_or_404(Log, id=log_id)
    
@@ -1550,7 +1539,7 @@ def delete_log(request, log_id):
 
 
 
-
+# to combine both comment and log in one page
 def comments_and_logs(request, log_id=None):
     user = request.user
     if user.groups.filter(name='team_member').exists():
